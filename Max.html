@@ -1,12 +1,56 @@
 <!DOCTYPE html>
 <html lang="de">
+<head>
+<style>
+:root {
+  --dot-size: 10rem;
+  --animation-duration: 1s;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 0; } /* more concise! */
+  50% { opacity: 1; }
+}
+
+.dot {
+  width: var(--dot-size);
+  height: var(--dot-size);
+  background-color: red;
+  border-radius: 50%;
+}
+
+.dot--basic {
+  animation: blink 2s infinite;
+}
+
+
+</style>
+</head>
+
 <body>
+
+
+ <div class="dot dot--basic"></div>
+
+<svg width="420px" height="507px" viewBox="0 0 420 507" display: block margin auto>
+    <g id="Artboard" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <polygon id="Triangle" fill="#507E1A" points="210 0 330 120 90 120"></polygon>
+        <polygon id="Triangle" fill="#507E1A" points="210 60 360 210 60 210"></polygon>
+        <polygon id="Triangle" fill="#507E1A" points="210 135 390 315 30 315"></polygon>
+        <polygon id="Triangle" fill="#507E1A" points="210 225 420 435 0 435"></polygon>
+        <rect id="Rectangle" fill="#8B572A" x="180" y="435" width="60" height="72"></rect>
+    </g>
+</svg>
+ <div class="dot dot--basic"></div>
+<marquee>GUTSCHEIN GUTSCHEIN GUTSCHEIN GUTSCHEIN GUTSCHEIN </marquee>
 <h1> Lieber Max, zum Ausspannen schenke ich dir (mit mir (yay!)) ein paar schöne Stunden hier:</h1>
 
-
+<marquee direction="up">WEIHNACHTEN WEIHNACHTEN WEIHNACHTEN WEIHNACHTEN WEIHNACHTEN WEIHNACHTENWEIHNACHTEN WEIHNACHTEN WEIHNACHTENWEIHNACHTEN WEIHNACHTEN WEIHNACHTENWEIHNACHTEN WEIHNACHTEN WEIHNACHTEN</marquee>
  <img src="sauna.PNG" alt="Selfhtml">
 
 
-    
+<h1> Am besten wenns kalt ist!</h1>
+
+
 </body>
 </html>

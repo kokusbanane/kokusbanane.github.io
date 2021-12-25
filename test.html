@@ -1,0 +1,49 @@
+ <!DOCTYPE html>
+<html>
+<head>
+<style>
+:root {
+  --dot-size: 1rem;
+  --animation-duration: 2s;
+}
+body {
+  background-color: linen;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 0; } /* more concise! */
+  50% { opacity: 1; }
+}
+
+.dot {
+  width: var(--dot-size);
+  height: var(--dot-size);
+  background-color: red;
+  border-radius: 50%;
+}
+
+.dot--basic {
+  animation: blink 2s infinite;
+}
+
+
+h1 {
+  color: maroon;
+  margin-left: 40px;
+}
+</style>
+</head>
+<body>
+
+<h1>This is a heading</h1>
+<p>This is a paragraph.</p>
+
+      <h1>Blinking dots</h1>
+      <div class="flex-container">
+        <div class="dot dot--basic"></div>
+      </div>
+
+<p>Paragraph below dot.</p>
+
+</body>
+</html> 
