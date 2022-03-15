@@ -63,8 +63,17 @@
           // setting gameActive flag to false
           clearInterval(gameControl);
           gameActive = false;
-          document.getElementById("game-status").innerHTML = "<small>Game Over</small>";
+	  if (x < 15)
+          {
+          document.getElementById("game-status").innerHTML = "<small>Game Over sad</small>";
           document.getElementById("game-score").innerHTML = "<h1>Score: " + x + "</h1>";
+          }
+          else 
+	  {
+          document.getElementById("game-status").innerHTML = "<small> Win Win </small>";
+          document.getElementById("game-score").innerHTML = "<h1>Score: " + x + "</h1>";
+
+          }
       }
 
       // game world
