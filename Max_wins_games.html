@@ -1,196 +1,298 @@
-<!DOCTYPE html>
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <title>Snake Game using HTML and Javascript - Studytonight</title>
-    <style>
-        .game-box {
-            text-align:center;   
-        }
-        .game-info {
-            text-align:center; 
-            font-family:arial;
-            line-height:24px;
-        }
-    </style>
-  </head>
-  <body>
-    <div class="game-box"><canvas id="canvas" width="400" height="400"></canvas></div>
-    <div class="game-info">
-        <h2>Snake Game</h2>
-        <p id="game-status"></p>
-        <p id="game-score"></p>
-    </div>
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Tetris of Code</title>
+  
+<style type="text/css">
+</style>
+</head>
+<body onload="tetris.play('scene')" onkeydown="tetris.handleKey(event)">
 
-    <script>
-      var canvas, ctx, gameControl, gameActive;
-      // render X times per second
-      var x = 8;
-      
-      const CANVAS_BORDER_COLOUR = 'black';
-      const CANVAS_BACKGROUND_COLOUR = "white";
-      const SNAKE_COLOUR = 'lightgreen';
-      const SNAKE_BORDER_COLOUR = 'darkgreen';
+<script src="jquery.js"></script>
+<script>
+
+score = 0;
+
+tetris = {
+		types : [[';', '(', ')', '{', '}'],
+		         ['=', '!=', '==', '<', '>'],
+		         ['1', '2', '4', '8'],
+		         ['+', '*', '/'],
+		         [' '],
+		         ['score', 'a', 'b', 'c', 'x', 'y', 'z'],
+		         ['for', 'if', 'while', 'do', 'function', 'return']
+		         ],
+		         
+		sizes : [1, 1, 1, 1, 1, 2, 1],
+		colors : ['#900', '#090', '#009', '#990', '#099', '#909', '#444'],
+		bgcolors : ['#fcc', '#cfc', '#ccf', '#ffc', '#cff', '#fcf', '#ccc'],
+		         
+		blocks : [],
+		
+		margin : 5,
+		h : 16, // in blockw
+		w : 16, // in blockw
+		blockw : 30,
+		
+		play : function(canvasId) {
+			var scene = document.getElementById(canvasId);
+			tetris.ctx = scene.getContext('2d');
+			
+			tetris.nextBlock = tetris.newBlock();
+			tetris.loop();
+		},
+		
+		drawBoard : function() {
+			var ctx = tetris.ctx; 
+			ctx.lineWidth = 2;
+			
+			ctx.clearRect(0, 0, 700, 700);
+			
+			ctx.fillStyle = "rgb(200,0,0)";
+			ctx.fillText("Score: "+score, tetris.w*tetris.blockw + 20, 30);
+			
+			this.ctx.strokeStyle = "rgb(200,0,0)";
+			this.ctx.fillStyle = "rgb(255,255,255)";
+			
+			ctx.beginPath();
+			tetris.rect(0,0,tetris.w*tetris.blockw,tetris.h*tetris.blockw);
+			ctx.fill();
+			ctx.stroke();
+		},
+		
+		rect : function(x, y, width, height, radius) {
+			radius = radius || 5;
+			x += tetris.margin;
+			y += tetris.margin;
+			var ctx = tetris.ctx;
+			ctx.moveTo(x + radius, y);
+			ctx.lineTo(x + width - radius, y);
+			ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
+			ctx.lineTo(x + width, y + height - radius);
+			ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+			ctx.lineTo(x + radius, y + height);
+			ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
+			ctx.lineTo(x, y + radius);
+			ctx.quadraticCurveTo(x, y, x + radius, y);
+		},
+		
+		drawBlocks : function() {
+			if (tetris.nextBlock) {
+				tetris.drawBlock(tetris.nextBlock, (tetris.w-tetris.nextBlock.x)*tetris.blockw + 20, 80);
+			}
+			
+			if (tetris.block) {
+				tetris.drawBlock(tetris.block);
+			}
+			for (var i in tetris.blocks) {
+				var b = tetris.blocks[i];
+				tetris.drawBlock(b);
+			}
+		},
+		
+		drawBlock : function(b,x,y) {
+			x = x || 0;
+		 	y = y || 0;
+		 	var w = tetris.sizes[b.type];
+			var ctx = tetris.ctx; 
+			ctx.beginPath();
+			tetris.rect(x+b.x*tetris.blockw,y+b.y*tetris.blockw, w*tetris.blockw,tetris.blockw);
+			ctx.strokeStyle = tetris.colors[b.type];
+			ctx.fillStyle = tetris.bgcolors[b.type];
+			ctx.fill();
+			ctx.stroke();
+			ctx.fillStyle = tetris.colors[b.type];
+			var txt = tetris.types[b.type][b.seq];
+			ctx.fillText(txt, x+(b.x+0.35)*tetris.blockw,y+(b.y+0.65)*tetris.blockw);
+		},
+		
+		setGameOver : function() {
+			tetris.gameOver = true;
+			
+			var ctx = tetris.ctx;
+			ctx.fillStyle = "rgb(0,0,0)";
+			ctx.fillText("GAME OVER", 100, 100);
+		},
+		
+		checkSuccess : function(row) {
+			var rowBlocks = [];
+			
+			for (var i in tetris.blocks) {
+				var b = tetris.blocks[i];
+				if (b.y === row) {
+					rowBlocks.push(b);
+				}
+			}
+			
+			var success = tetris.isRowComplete(rowBlocks);
+			
+			if (!success) {
+				return;
+			}
+			
+			score += 100;
+			
+			// move all one row down and remove scored row
+			for (var i = tetris.blocks.length -1; i >= 0; i--) {
+				var b = tetris.blocks[i];
+				if (b.y === row) {
+					tetris.blocks.splice(i, 1);
+				} else if (b.y < row) {
+					b.y++;
+				}
+			}
+			
+			rowBlocks.sort(function(a,b) {
+				return a.x - b.x;
+			});
+			var str = "";
+			for (var i in rowBlocks) {
+				var b = rowBlocks[i];
+				str += tetris.types[b.type][b.seq];
+			}
+			$("#out").append(str+"\n");
+			try {
+				eval(str);
+			} catch(err) {
+				$("#out").append(err);
+				tetris.setGameOver();
+			}
+		},
+		
+		isRowComplete :function(blocks) {
+			var len = 0;
+			for (var i in blocks) {
+				var b = blocks[i];
+				len += tetris.sizes[b.type];
+			}
+			
+			return len == tetris.w;
+		},
+		
+		updateBlock : function() {
+			if (tetris.block === undefined) {
+				tetris.block = tetris.nextBlock;
+				tetris.nextBlock = tetris.newBlock();
+				return;
+			}
+			
+			if (tetris.block.y+1 == tetris.h) {
+				tetris.blocks.push(tetris.block);
+				tetris.checkSuccess(tetris.block.y);
+				
+				var b = tetris.getBlock(tetris.nextBlock.x, tetris.nextBlock.y, tetris.sizes[tetris.newBlock.type]);
+				if (b !== undefined) {
+					tetris.setGameOver();
+					return;
+				}
+				tetris.block = tetris.nextBlock;
+				tetris.nextBlock = tetris.newBlock();
+				return;
+			}
+			
+			if (tetris.getBlock(tetris.block.x, tetris.block.y+1, tetris.sizes[tetris.block.type]) == undefined) {
+				tetris.block.y += 1;
+				return;
+			}
+			
+			tetris.blocks.push(tetris.block);
+			tetris.checkSuccess(tetris.block.y);
+			
+			var b = tetris.getBlock(tetris.nextBlock.x, tetris.nextBlock.y, tetris.sizes[tetris.block.type]);
+			if (b !== undefined) {
+				tetris.setGameOver();
+				return;
+			}
+			tetris.block = tetris.nextBlock;
+			tetris.nextBlock = tetris.newBlock();
+		},
+		
+		getBlock : function (x, y, w) {
+			w = w || 1;
+			for (var i in tetris.blocks) {
+				var b = tetris.blocks[i];
+				if (((b.x < x + w) && (x < b.x + tetris.sizes[b.type])) 
+						&& (b.y === y)) {
+					return b;
+				}
+			}
+			
+			return undefined;
+		},
+		
+		getTopBlock : function (x, w) {
+			w = w || 1;
+			var max = tetris.h + 1;
+			var found = undefined;
+			for (var i in tetris.blocks) {
+				var b = tetris.blocks[i];
+				if (((b.x < x + w) && (x < b.x + tetris.sizes[b.type])) && (b.y < max)) {
+					max = b.y;
+					found = b;
+				}
+			}
+			
+			return found;
+		},
+		
+		newBlock : function() {
+			var t = Math.round(Math.random() * 1000) % tetris.types.length;
+			return {x : tetris.w/2 - 1, y : 0, type : t, seq : 0 };
+		},
+		
+		redraw : function() {
+			tetris.drawBoard();
+			tetris.drawBlocks();
+		},
+		
+		loop : function() {
+			tetris.redraw();
+			tetris.updateBlock();
+			
+			if (tetris.gameOver === undefined) {
+				setTimeout(tetris.loop, 500);
+			}
+		},
+		
+		handleKey : function(event) {
+			if (tetris.gameOver !== undefined) {
+				return;
+			}
+			
+			if (event.keyCode === 37) { // left
+				if (tetris.block.x > 0) {
+					tetris.block.x--;
+				}
+			} else if (event.keyCode === 39) { // right
+				if (tetris.block.x + tetris.sizes[tetris.block.type] < tetris.w) {
+					tetris.block.x++;
+				}
+			} else if (event.keyCode === 40) { // down
+				var b = tetris.getTopBlock(tetris.block.x, tetris.sizes[tetris.block.type]);
+			    if (!b) {
+			    	tetris.block.y = tetris.h - 1;
+			    } else {
+			    	tetris.block.y = b.y - 1;
+			    }
+			} else if (event.keyCode === 38) { // up
+					tetris.block.seq = (tetris.block.seq + 1) % (tetris.types[tetris.block.type].length);
+			}
+			
+			tetris.redraw();
+		}
+}
+
+</script>
 
 
-      window.onload = function() {
-        canvas = document.getElementById("canvas");
-        ctx = canvas.getContext("2d");
 
-        document.addEventListener("keydown", keyDownEvent);
-
-        gameControl = startGame(x);
-      };
-      
-      /* function to start the game */
-      function startGame(x) {
-          // setting gameActive flag to true
-          gameActive = true;
-          document.getElementById("game-status").innerHTML = "<small>Game Started</small>";
-          document.getElementById("game-score").innerHTML = "";
-          return setInterval(draw, 1000 / x);
-      }
-      
-      function pauseGame() {
-          // setting gameActive flag to false
-          clearInterval(gameControl);
-          gameActive = false;
-          document.getElementById("game-status").innerHTML = "<small>Game Paused</small>";
-      }
-      
-      function endGame(x) {
-          // setting gameActive flag to false
-          clearInterval(gameControl);
-          gameActive = false;
-	  if (x < 15)
-          {
-          document.getElementById("game-status").innerHTML = "<small> Not enough points! </small>";
-          document.getElementById("game-score").innerHTML = "<h1>Score: " + x + "</h1>";
-          }
-          else 
-	  {
-          document.getElementById("game-status").innerHTML = "<small> Congrats, Enough points please go to https://kokusbanane.github.io/Regina </small>";
-          document.getElementById("game-score").innerHTML = "<h1>Score: " + x + "</h1>";
-
-          }
-      }
-
-      // game world
-      var gridSize = (tileSize = 20); // 20 x 20 = 400
-      var nextX = (nextY = 0);
-
-      // snake
-      var defaultTailSize = 3;
-      var tailSize = defaultTailSize;
-      var snakeTrail = [];
-      var snakeX = (snakeY = 10);
-
-      // apple
-      var appleX = (appleY = 15);
-
-      // draw
-      function draw() {
-        // move snake in next pos
-        snakeX += nextX;
-        snakeY += nextY;
-
-        // snake over game world?
-        if (snakeX < 0) {
-          snakeX = gridSize - 1;
-        }
-        if (snakeX > gridSize - 1) {
-          snakeX = 0;
-        }
-
-        if (snakeY < 0) {
-          snakeY = gridSize - 1;
-        }
-        if (snakeY > gridSize - 1) {
-          snakeY = 0;
-        }
-
-        //snake bite apple?
-        if (snakeX == appleX && snakeY == appleY) {
-          tailSize++;
-
-          appleX = Math.floor(Math.random() * gridSize);
-          appleY = Math.floor(Math.random() * gridSize);
-        }
-
-        //  Select the colour to fill the canvas
-      ctx.fillStyle = CANVAS_BACKGROUND_COLOUR;
-      //  Select the colour for the border of the canvas
-      ctx.strokestyle = CANVAS_BORDER_COLOUR;
-
-      // Draw a "filled" rectangle to cover the entire canvas
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-      // Draw a "border" around the entire canvas
-      ctx.strokeRect(0, 0, canvas.width, canvas.height);
-
-        // paint snake
-        ctx.fillStyle = SNAKE_COLOUR;
-        ctx.strokestyle = SNAKE_BORDER_COLOUR;
-        for (var i = 0; i < snakeTrail.length; i++) {
-          ctx.fillRect(
-            snakeTrail[i].x * tileSize,
-            snakeTrail[i].y * tileSize,
-            tileSize,
-            tileSize
-          );
-          
-          ctx.strokeRect(snakeTrail[i].x * tileSize , snakeTrail[i].y* tileSize, tileSize, tileSize);
-
-          //snake bites it's tail?
-          if (snakeTrail[i].x == snakeX && snakeTrail[i].y == snakeY) {
-            if(tailSize > 3) {
-                endGame(tailSize);
-            }
-            tailSize = defaultTailSize;  
-          }
-        }
-
-        // paint apple
-        ctx.fillStyle = "red";
-        ctx.fillRect(appleX * tileSize, appleY * tileSize, tileSize, tileSize);
-
-        //set snake trail
-        snakeTrail.push({ x: snakeX, y: snakeY });
-        while (snakeTrail.length > tailSize) {
-          snakeTrail.shift();
-        }
-      }
-
-      // input
-      function keyDownEvent(e) {
-        switch (e.keyCode) {
-          case 37:
-            nextX = -1;
-            nextY = 0;
-            break;
-          case 38:
-            nextX = 0;
-            nextY = -1;
-            break;
-          case 39:
-            nextX = 1;
-            nextY = 0;
-            break;
-          case 40:
-            nextX = 0;
-            nextY = 1;
-            break;
-          case 32:
-            if(gameActive == true) {
-                pauseGame();
-            }
-            else {
-                gameControl = startGame(x);
-            }
-            break;
-        }
-      }
-    </script>
-  </body>
+<canvas id="scene" width="700" height="630">
+Your browser is too old to play. Please do update.
+</canvas>
+<pre>
+<div id="out">
+</div>
+</pre>
+</body>
 </html>
-
