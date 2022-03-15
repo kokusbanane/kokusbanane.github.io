@@ -25,6 +25,8 @@
 var canvas = document.getElementById('game');
 var context = canvas.getContext('2d');
 
+var score = 0;
+
 var grid = 16;
 var count = 0;
   
@@ -63,6 +65,7 @@ function loop() {
   }
 
   count = 0;
+  context.fillText(score);
   context.clearRect(0,0,canvas.width,canvas.height);
 
   // move snake by it's velocity
