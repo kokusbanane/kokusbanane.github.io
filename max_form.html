@@ -3,49 +3,165 @@
 <head>
   <meta charset="UTF-8" />
   <title>You reached the form stage successfully!</title>
+  <!-- Google Fonts (optional) -->
+  <link rel="preconnect" href="https://fonts.gstatic.com" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600&display=swap"
+    rel="stylesheet"
+  />
+  <style>
+    /* Basic Reset */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    /* Body styling */
+    body {
+      font-family: 'Quicksand', sans-serif;
+      background: #faf3dd; /* Soft, warm background color */
+      color: #333;
+      padding: 20px;
+    }
+
+    /* Container to center content and add a neat card style */
+    .container {
+      max-width: 600px;
+      margin: 40px auto;
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      padding: 30px;
+    }
+
+    h1 {
+      margin-bottom: 1rem;
+      color: #5c4a2d; /* Slightly darker text color for contrast */
+      font-weight: 600;
+      text-align: center;
+    }
+
+    p {
+      margin-bottom: 1rem;
+    }
+
+    form {
+      margin-top: 1.5rem;
+      display: flex;
+      flex-direction: column;
+    }
+
+    label {
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+    }
+
+    input[type="text"] {
+      padding: 0.5rem;
+      margin-bottom: 1.5rem;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 1rem;
+    }
+
+    /* Styles for the checkbox section */
+    .checkbox-group {
+      margin-bottom: 1.5rem;
+    }
+
+    .checkbox-group label {
+      margin-bottom: 0.5rem;
+      display: inline-block;
+    }
+
+    input[type="checkbox"] {
+      margin-right: 0.5rem;
+    }
+
+    /* Button styling */
+    button {
+      cursor: pointer;
+      background-color: #e07a5f; 
+      color: #fff;
+      font-size: 1rem;
+      font-weight: 600;
+      padding: 0.75rem 1.5rem;
+      border: none;
+      border-radius: 4px;
+      transition: background-color 0.2s ease-in-out;
+      margin-top: 1rem;
+    }
+
+    button:hover {
+      background-color: #ee6c4d;
+    }
+
+    /* Minor responsive tweak */
+    @media (max-width: 600px) {
+      .container {
+        margin: 20px;
+        padding: 20px;
+      }
+    }
+  </style>
 </head>
 <body>
-  <h1>Congrats, max! or rather max(congrats)^^.</h1>
-  <h1>Your lovely siblings gift you with a one of a kind get out of the house experience.</h1>
-  <h1>https://www.mycityhunt.de/standorte/muenchen-de-6260/schatzsuche-muenchenzentrum-418</h1>
-  <h1>Food, drinks and fun included!</h1>
+  <div class="container">
+    <h1>Congrats, max!</h1>
+    <h1>or rather max(congrats)^^</h1>
+    <h1>Your lovely siblings gift you a one-of-a-kind get out of the house experience!</h1>
+    <h1>
+      <a
+        href="https://www.mycityhunt.de/standorte/muenchen-de-6260/schatzsuche-muenchenzentrum-418"
+        target="_blank"
+        style="text-decoration: none; color: #3d405b;"
+      >
+        https://www.mycityhunt.de/standorte/muenchen-de-6260/schatzsuche-muenchenzentrum-418
+      </a>
+    </h1>
+    <h1>Food, drinks, and fun included!</h1>
 
-  <!-- 
-    When a user fills out this form and clicks "Submit," Formspree 
-    will email you the form details.
-  -->
-  <form action="https://formspree.io/f/xpwwwdvv" method="POST">
-    <!-- (Optional) Hidden field to set the subject in the email you receive -->
-    <input type="hidden" name="_subject" value="New Form Submission" />
+    <form action="https://formspree.io/f/xpwwwdvv" method="POST">
+      <!-- (Optional) Hidden field to set the subject in the email you receive -->
+      <input type="hidden" name="_subject" value="New Form Submission" />
 
-    <!-- Name and Surname Fields -->
-    <label for="fname">Name:</label><br />
-    <input type="text" id="fname" name="name" required /><br /><br />
+      <!-- Name and Surname Fields -->
+      <label for="fname">Name:</label>
+      <input type="text" id="fname" name="name" required />
 
-    <label for="lname">Surname:</label><br />
-    <input type="text" id="lname" name="surname" required /><br /><br />
+      <label for="lname">Surname:</label>
+      <input type="text" id="lname" name="surname" required />
 
-    <!-- Multiple Options (Check all that apply) -->
-    <p><strong>To continue your journey, choose wisely:</strong></p>
-    <label>
-      <input type="checkbox" name="options[]" value="03.05." />
-      03.05.
-    </label><br />
-    <label>
-      <input type="checkbox" name="options[]" value="10.05." />
-      10.05.
-    </label><br />
-    <label>
-      <input type="checkbox" name="options[]" value="12.07." />
-      12.07.
-    </label><br />
-    <label>
-      <input type="checkbox" name="options[]" value="19.07." />
-      19.07.
-    </label><br /><br />
+      <!-- Multiple Options (Check all that apply) -->
+      <p><strong>To continue your journey, choose wisely:</strong></p>
+      <div class="checkbox-group">
+        <label>
+          <input type="checkbox" name="options[]" value="03.05." />
+          03.05.
+        </label>
+        <br />
+        <label>
+          <input type="checkbox" name="options[]" value="10.05." />
+          10.05.
+        </label>
+        <br />
+        <label>
+          <input type="checkbox" name="options[]" value="12.07." />
+          12.07.
+        </label>
+        <br />
+        <label>
+          <input type="checkbox" name="options[]" value="19.07." />
+          19.07.
+        </label>
+      </div>
 
-    <!-- Submit Button -->
-    <button type="submit"> submit (and confirm Jo is the best)</button>
-  </form>
+      <!-- Submit Button -->
+      <button type="submit">
+        submit (and confirm Jo is the best)
+      </button>
+    </form>
+  </div>
 </body>
 </html>
