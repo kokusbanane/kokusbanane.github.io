@@ -2,24 +2,46 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Formspree Example</title>
+  <title>Formspree Example with Name, Surname, and Multiple Options</title>
 </head>
 <body>
-  <h1>Choose an Option</h1>
+  <h1>Formspree Example</h1>
 
+  <!-- 
+    When a user fills out this form and clicks "Submit," Formspree 
+    will email you the form details.
+  -->
   <form action="https://formspree.io/f/xpwwwdvv" method="POST">
-    <!-- (Optional) Hidden field to set a custom subject in the email you receive -->
-    <input type="hidden" name="_subject" value="New selection from GitHub Pages" />
-    
-    <label for="option-select">Select an option:</label>
-    <select id="option-select" name="option">
-      <option value="Option 1">Option 1</option>
-      <option value="Option 2">Option 2</option>
-      <option value="Option 3">Option 3</option>
-      <option value="Option 4">Option 4</option>
-    </select>
-    
-    <br><br>
+    <!-- (Optional) Hidden field to set the subject in the email you receive -->
+    <input type="hidden" name="_subject" value="New Form Submission" />
+
+    <!-- Name and Surname Fields -->
+    <label for="fname">Name:</label><br />
+    <input type="text" id="fname" name="name" required /><br /><br />
+
+    <label for="lname">Surname:</label><br />
+    <input type="text" id="lname" name="surname" required /><br /><br />
+
+    <!-- Multiple Options (Check all that apply) -->
+    <p><strong>Select one or more options:</strong></p>
+    <label>
+      <input type="checkbox" name="options[]" value="Option 1" />
+      Option 1
+    </label><br />
+    <label>
+      <input type="checkbox" name="options[]" value="Option 2" />
+      Option 2
+    </label><br />
+    <label>
+      <input type="checkbox" name="options[]" value="Option 3" />
+      Option 3
+    </label><br />
+    <label>
+      <input type="checkbox" name="options[]" value="Option 4" />
+      Option 4
+    </label><br /><br />
+
+    <!-- Submit Button -->
     <button type="submit">Submit</button>
   </form>
 </body>
