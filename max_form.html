@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Formspree Example</title>
+</head>
+<body>
+  <h1>Choose an Option</h1>
+
+  <form action="https://formspree.io/f/xpwwwdvv" method="POST">
+    <!-- (Optional) Hidden field to set a custom subject in the email you receive -->
+    <input type="hidden" name="_subject" value="New selection from GitHub Pages" />
+    
+    <label for="option-select">Select an option:</label>
+    <select id="option-select" name="option">
+      <option value="Option 1">Option 1</option>
+      <option value="Option 2">Option 2</option>
+      <option value="Option 3">Option 3</option>
+      <option value="Option 4">Option 4</option>
+    </select>
+    
+    <br><br>
+    <button type="submit">Submit</button>
+  </form>
+</body>
+</html>
