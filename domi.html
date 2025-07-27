@@ -354,8 +354,9 @@
       $("#v_"+k).textContent = src;
       localStorage.setItem("v_"+k, src);
     });
-    $("#editor")..style.display="none";
+    $("#editor").style.display = "none";   // ← korrigiert (ein Punkt)
   }
+
   function fillEditorFromVoucher(){
     const fields=["datum","uhr","ort","route","dauer","mitbringen","snacks","backup","kontakt"];
     fields.forEach(k=>{
@@ -364,6 +365,7 @@
       $("#e_"+k).value = val;
     });
   }
+
   function restoreVoucherValues(){
     const fields=["datum","uhr","ort","route","dauer","mitbringen","snacks","backup","kontakt"];
     fields.forEach(k=>{
