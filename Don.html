@@ -2,7 +2,7 @@
 <html lang="de">
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Herz-Checker – korrekt ausgerichtet, mit Debug-Overlay</title>
+<title>Herz-Checker – mit Debug-Overlay</title>
 <style>
   :root{ --w: 256px; }
   body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;max-width:980px;margin:0 auto;padding:24px;line-height:1.45}
@@ -41,23 +41,15 @@
 
     <div class="panel">
       <div class="row">
-        <label><span>Form-Schwelle</span>
-          <input id="thrIoU" type="number" step="0.01" min="0" max="1" value="0.28">
-        </label>
-        <label><span>Symm.-Schwelle</span>
-          <input id="thrSym" type="number" step="0.01" min="0" max="1" value="0.50">
-        </label>
         <label title="Pixel-Toleranz (Abstand zur idealen Kante)">
           <span>Toleranz (px)</span>
           <input id="tolPix" type="number" step="1" min="1" max="32" value="6">
         </label>
-      </div>
-      <div class="row">
         <label title="rel. Kantenbreite der Herz-Schablone">
           <span>Kantenbreite</span>
           <input id="edgeFrac" type="number" step="0.01" min="0.05" max="0.4" value="0.18">
         </label>
-        <label title="vertikale Streckung: >1 macht das Herz höher">
+        <label title="Vertikale Streckung: >1 macht das Herz höher">
           <span>Vertikal-Faktor</span>
           <input id="aspectY" type="number" step="0.01" min="0.8" max="1.4" value="1.10">
         </label>
@@ -89,29 +81,29 @@
     <div id="scores">Bereit…</div>
 
     <div id="secret">
-      ✅ Herz erkannt! <a id="secretLink" href="#" rel="nofollow noopener" target="_blank">Hier ist dein Link</a>
+      ✅ Herz erkannt! <a id="secretLink" href="https://www.artnight.com/events/struktur-abstrakt-on-09-12-2025-in-wuerzburg-1010184207" rel="nofollow noopener" target="_blank">Hier ist dein Link</a>
     </div>
 
     <hr>
     <small class="note">
-      Das Overlay zeigt die <b>beste</b> gefundene Herzform (Skalierung, Drehung, Verschiebung). Das optionale
-      Toleranzband markiert Pixel, die innerhalb deiner Toleranz zur idealen Kante liegen.
+      Schwellen sind fest eingestellt (Form 0,28 · Symmetrie 0,50). Passe bei Bedarf nur Toleranz/Kantenbreite an.
     </small>
   </div>
 </div>
 
 <script>
-/* ===================== Einstellungen ===================== */
-const SECRET_URL   = "https://example.com/dein-link";   // <— anpassen
-let IOU_THRESHOLD  = 0.28;
-let SYMM_THRESHOLD = 0.50;
-let TOL_PIX        = 6;
-let EDGE_FRAC      = 0.18;
-let ASPECT_Y       = 1.10;
+/* ===================== Feste Einstellungen ===================== */
+const SECRET_URL   = "https://www.artnight.com/events/struktur-abstrakt-on-09-12-2025-in-wuerzburg-1010184207";
+const IOU_THRESHOLD  = 0.28;   // fix
+const SYMM_THRESHOLD = 0.50;   // fix
+
+let TOL_PIX   = 6;     // vom UI änderbar
+let EDGE_FRAC = 0.18;  // vom UI änderbar
+let ASPECT_Y  = 1.10;  // vom UI änderbar
 
 // getestete Skalen, Rotationen und Offsets
 const SCALES  = [0.85, 0.95, 1.00, 1.05, 1.15];
-const ROT_DEG = [-20, -12, -8, -4, 0, 4, 8, 12, 20];   // mehr Spielraum
+const ROT_DEG = [-20, -12, -8, -4, 0, 4, 8, 12, 20];
 const OFFSETS = [-6, -3, 0, 3, 6];
 
 /* ===================== Canvas-Zeichnen ===================== */
@@ -152,13 +144,11 @@ document.getElementById('clear').onclick = () => {
 
 document.getElementById('secretLink').href = SECRET_URL;
 
-// UI-Parameter binden
+// UI-Parameter binden (nur Toleranz/Kante/Aspect + Overlay-Alpha)
 const $ = id => document.getElementById(id);
-$('thrIoU').addEventListener('input', e => IOU_THRESHOLD  = parseFloat(e.target.value));
-$('thrSym').addEventListener('input', e => SYMM_THRESHOLD = parseFloat(e.target.value));
-$('tolPix').addEventListener('input', e => TOL_PIX        = parseFloat(e.target.value));
-$('edgeFrac').addEventListener('input', e => EDGE_FRAC    = parseFloat(e.target.value));
-$('aspectY').addEventListener('input', e => ASPECT_Y      = parseFloat(e.target.value));
+$('tolPix').addEventListener('input', e => TOL_PIX   = parseFloat(e.target.value));
+$('edgeFrac').addEventListener('input', e => EDGE_FRAC = parseFloat(e.target.value));
+$('aspectY').addEventListener('input', e => ASPECT_Y  = parseFloat(e.target.value));
 $('dbgAlpha').addEventListener('input', e => $('dbgAlphaOut').textContent = Number(e.target.value).toFixed(2));
 $('dbgAlphaOut').textContent = Number($('dbgAlpha').value).toFixed(2);
 
@@ -253,7 +243,6 @@ function edtFromMask(mask, w, h){
 /* ============ Herz füllen (implizite Gleichung, y nach OBEN) ============ */
 function fillHeartMask(arr, W,H, offX, offY, boxW, boxH, scale, rotRad=0){
   // (x^2 + y^2 - r^2)^3 - r * x^2 * y^3 <= 0
-  // Wichtig: Hier ist y nach OBEN positiv. Wir invertieren Canvas-y.
   const r = 1.0;
   const cos = Math.cos(rotRad), sin = Math.sin(rotRad);
 
@@ -262,15 +251,14 @@ function fillHeartMask(arr, W,H, offX, offY, boxW, boxH, scale, rotRad=0){
       const gx = offX + x, gy = offY + y;
       if (gx < 0 || gy < 0 || gx >= W || gy >= H) continue;
 
-      // Normierung: x in [-1,1]; y in [-1,1] mit y=+1 oben, -1 unten
+      // x in [-1,1]; y in [-1,1] mit y=+1 oben
       let nx = (x / boxW) * 2 - 1;
       let ny = 1 - (y / boxH) * 2;
 
-      // CCW-Rotation im mathematischen System (y nach oben)
+      // CCW-Rotation
       const rx =  cos * nx - sin * ny;
       const ry =  sin * nx + cos * ny;
 
-      // Skalierung + vertikale Streckung
       nx = rx / scale;
       ny = (ry / scale) * ASPECT_Y;
 
