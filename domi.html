@@ -4,7 +4,7 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Dommis wunderbares Abenteuer</title>
-<meta name="description" content="Überraschungs-Geschenkseite mit zwei Rätseln. Nach dem Lösen werden Ziel und Gutschein sichtbar." />
+<meta name="description" content="Überraschungs-Geschenkseite mit fünf Rätseln. Erst nach dem Lösen erscheint der Gutschein." />
 <style>
   :root{
     --bg:#0e2a47; --fg:#ffffff; --accent:#00c2ff; --accent2:#ffd166; --ok:#51d88a; --warn:#ff6b6b;
@@ -17,7 +17,7 @@
   header{position:relative; text-align:center; padding:64px 24px 32px; overflow:hidden; isolation:isolate;}
   header h1{font-size: clamp(2rem, 6vw, 4rem); margin:0; line-height:1.05; letter-spacing:0.01em;
     text-shadow: 0 8px 24px rgba(0,0,0,.35);}
-  header p.lead{margin:16px auto 0; max-width:720px; font-size:clamp(1.05rem,2.3vw,1.35rem); opacity:.95}
+  header p.lead{margin:16px auto 0; max-width:820px; font-size:clamp(1.05rem,2.3vw,1.35rem); opacity:.95}
   .wave{position:absolute; left:0; right:0; bottom:-1px; height:120px;
     background:
       radial-gradient(circle at 10% 40%, #0f3357 0 12%, transparent 13%),
@@ -26,7 +26,7 @@
       radial-gradient(circle at 85% 70%, #0f3357 0 12%, transparent 13%);
     opacity:.8; filter: blur(2px);}
   main{padding:24px}
-  .container{max-width:1000px;margin-inline:auto}
+  .container{max-width:1100px;margin-inline:auto}
   .card{
     background:color-mix(in srgb, var(--card) 92%, #fff 8%);
     border:1px solid color-mix(in srgb, var(--accent) 15%, #000 85%);
@@ -55,9 +55,6 @@
   button:disabled{opacity:.55; cursor:not-allowed}
   .symbols{font-size:2rem; line-height:1.4; display:flex; flex-wrap:wrap; gap:12px; margin:12px 0;}
   .symbols span{filter: drop-shadow(0 4px 8px rgba(0,0,0,.35))}
-  .hint{font-size:.95rem; opacity:.9}
-
-  /* Gutschein */
   #voucher{margin-top:24px; position:relative; overflow:hidden; border:2px dashed #2a6a8f; border-radius:18px; background:#0a233b;}
   #voucher h2{font-size:1.8rem}
   .stamp{
@@ -72,14 +69,9 @@
   #voucher .content-inner{padding:28px; display:grid; gap:16px; grid-template-columns:1.1fr 0.9fr;}
   .voucher-list li{margin:6px 0}
   .controls{display:flex; gap:12px; flex-wrap:wrap; margin-top:16px}
-
   #confetti{position:fixed; inset:0; pointer-events:none; z-index:999}
   footer{text-align:center; opacity:.75; font-size:.95rem; padding:40px 16px 64px;}
-
-  @media (max-width:780px){
-    #voucher .content-inner{grid-template-columns:1fr}
-    .stamp{width:160px}
-  }
+  @media (max-width:780px){#voucher .content-inner{grid-template-columns:1fr}.stamp{width:160px}}
   @media print{
     body{background:white;color:black}
     header, .lock, .controls, #confetti{display:none !important}
@@ -94,7 +86,7 @@
 
 <header>
   <h1>Dommis wunderbares Abenteuer</h1>
-  <p class="lead">Überraschung! Diese Seite ist deine Gutscheinkarte. Löse zwei kleine Rätsel – dann werden <strong>Ziel</strong> und alle Details enthüllt.</p>
+  <p class="lead">Fünf Rätsel warten. Erst wenn alle gelöst sind, zeigt sich das Ziel samt Gutschein.</p>
   <div class="wave" aria-hidden="true"></div>
 </header>
 
@@ -102,117 +94,147 @@
   <div class="container">
     <section class="card" aria-labelledby="intro-title">
       <h2 id="intro-title">Ahoi, Dommi! ⚓️</h2>
-      <p>Wir planen ein <strong>feucht-fröhliches Wasserabenteuer</strong> mit Picknick, Musik und bester Crew. Pack Sonnencreme, Sonnenbrille und Entdeckergeist ein – um den Rest kümmern wir uns. Erstmal heißt es aber: die Geheimnisse der Karte knacken …</p>
-      <span class="badge">2 Rätsel · 1 Abenteuer</span>
+      <p>Es geht auf’s Wasser – mehr wird noch nicht verraten. Löse die Rätsel und lüfte das Geheimnis.</p>
+      <span class="badge">5 Rätsel · 1 Abenteuer</span>
     </section>
 
     <section class="grid" style="margin-top:24px">
-      <!-- Puzzle 1 -->
+      <!-- 1 -->
       <article class="puzzle" id="puzzle1" aria-labelledby="p1-title">
         <h3 id="p1-title">Rätsel 1 – Das geheime Wort</h3>
-        <p>Finde das Wort, das unser Gefährt beschreibt. 12 Buchstaben – sobald du es kennst, öffnet sich der Weg.</p>
-        <p class="hint">Hinweis: Es ist ein <em>aufblasbares Wassergefährt</em>. Tippe das Wort ohne Leerzeichen.</p>
+        <p>Finde das Wort, das unser Gefährt bezeichnet. Schreibweise: ohne Leerzeichen.</p>
         <div class="input-row">
-          <label for="word" class="sr-only">Geheimes Wort</label>
-          <input id="word" type="text" autocomplete="off" placeholder="Geheimes Wort eingeben …" />
+          <input id="word" type="text" autocomplete="off" placeholder="Wort eingeben …" />
           <button id="check1">Prüfen</button>
-          <button id="hint1" class="secondary" type="button">Tipp anzeigen</button>
         </div>
         <div id="status1" class="status" aria-live="polite"></div>
       </article>
 
-      <!-- Puzzle 2 -->
+      <!-- 2 -->
       <article class="puzzle" id="puzzle2" aria-labelledby="p2-title">
-        <h3 id="p2-title">Rätsel 2 – Der Fluss-Code</h3>
-        <p>Finde den vierstelligen Code. Er lautet: <strong>Enten – Paddel – Rettungsringe – Wellen</strong>.</p>
+        <h3 id="p2-title">Rätsel 2 – Symbolcode</h3>
+        <p>Bestimme die vierstellige Zahl in der Reihenfolge 🦆 → 🛶 → 🛟 → 🌊.</p>
         <div class="symbols" aria-hidden="true" id="symbolField">
-          <span class="duck">🦆</span><span class="duck">🦆</span><span class="duck">🦆</span>
-          <span class="paddle">🛶</span><span class="paddle">🛶</span>
-          <span class="ring">🛟</span>
           <span class="waveSymbol">🌊🌊</span>
+          <span class="duck">🦆</span>
+          <span class="paddle">🛶</span>
+          <span class="duck">🦆</span>
+          <span class="ring">🛟</span>
           <span class="waveSymbol">🌊</span>
+          <span class="paddle">🛶</span>
           <span class="waveSymbol">🌊🌊🌊</span>
+          <span class="duck">🦆</span>
           <span class="waveSymbol">🌊</span>
         </div>
-        <p class="hint">Zähle die Anzahl der <em>Symbole/Gruppen</em>, nicht die einzelnen Wellen innerhalb einer Gruppe.</p>
         <div class="input-row">
           <input id="code" type="text" inputmode="numeric" maxlength="4" placeholder="z. B. 3214" />
-          <button id="check2">Code prüfen</button>
-          <button id="giveHint2" class="secondary" type="button">Tipp</button>
+          <button id="check2">Prüfen</button>
         </div>
         <div id="status2" class="status" aria-live="polite"></div>
       </article>
+
+      <!-- 3 -->
+      <article class="puzzle" id="puzzle3" aria-labelledby="p3-title">
+        <h3 id="p3-title">Rätsel 3 – Analysis I (Basel-Reihe)</h3>
+        <p>Bestimme die exakte Summe <strong>S = ∑<sub>n=1</sub><sup>∞</sup> 1/n²</strong>.</p>
+        <p>Antwort als exakter Ausdruck (z. B. <code>π^2/6</code>) oder als Zahl (Toleranz 1e−6).</p>
+        <div class="input-row">
+          <input id="sumInput" type="text" autocomplete="off" placeholder="Exakte Form oder Zahl …" />
+          <button id="check3">Prüfen</button>
+        </div>
+        <div id="status3" class="status" aria-live="polite"></div>
+      </article>
+
+      <!-- 4 -->
+      <article class="puzzle" id="puzzle4" aria-labelledby="p4-title">
+        <h3 id="p4-title">Rätsel 4 – ε–δ-Aufgabe</h3>
+        <p>Für <strong>f(x)=3x+1</strong> gilt <strong>lim<sub>x→2</sub> f(x) = 7</strong>. Gib eine gültige Wahl <strong>δ(ε)</strong> an,
+           sodass aus <strong>|x−2| &lt; δ</strong> stets <strong>|f(x)−7| &lt; ε</strong> folgt.</p>
+        <div class="input-row">
+          <input id="deltaFormula" type="text" placeholder="Formel für δ(ε) …" />
+          <button id="check4f">Formel prüfen</button>
+        </div>
+        <div class="input-row" style="margin-top:8px">
+          <input id="epsNum" type="text" placeholder="ε > 0" />
+          <input id="deltaNum" type="text" placeholder="δ > 0" />
+          <button id="check4n">Numerisch prüfen</button>
+        </div>
+        <div id="status4" class="status" aria-live="polite"></div>
+      </article>
+
+      <!-- 5 -->
+      <article class="puzzle" id="puzzle5" aria-labelledby="p5-title">
+        <h3 id="p5-title">Rätsel 5 – Kfz-Bremssysteme</h3>
+        <p>Wodurch wird der <strong>Bremskraftverstärker (BKV)</strong> typischerweise mit Unterdruck versorgt?</p>
+        <form id="kfzForm">
+          <label style="display:block;margin:6px 0"><input type="radio" name="kfz" value="A"> A) Otto: Saugrohrunterdruck · Diesel: Vakuumpumpe.</label>
+          <label style="display:block;margin:6px 0"><input type="radio" name="kfz" value="B"> B) Beide ausschließlich durch Saugrohrunterdruck.</label>
+          <label style="display:block;margin:6px 0"><input type="radio" name="kfz" value="C"> C) Beide ausschließlich über den Turbolader.</label>
+          <label style="display:block;margin:6px 0"><input type="radio" name="kfz" value="D"> D) Otto: Vakuumpumpe · Diesel: Saugrohrunterdruck.</label>
+        </form>
+        <div class="input-row" style="margin-top:8px">
+          <button id="check5">Prüfen</button>
+        </div>
+        <div id="status5" class="status" aria-live="polite"></div>
+      </article>
     </section>
 
-    <!-- Gutschein (ohne Details, die werden erst injiziert) -->
+    <!-- Gutschein (wird erst injiziert) -->
     <section id="voucher" class="card" aria-labelledby="voucher-title">
       <div class="stamp" aria-hidden="true">
         <div>Gutschein<br><small>für Dommi</small></div>
       </div>
       <h2 id="voucher-title">Der Gutschein</h2>
-
       <div class="lock" id="lock">
-        <p>Die Details sind versiegelt. Sie erscheinen automatisch, sobald beide Rätsel gelöst sind.</p>
+        <p>Versiegelt. Löse alle fünf Rätsel, um alles aufzudecken.</p>
       </div>
-
       <div id="voucherContent" class="content" aria-hidden="true"></div>
     </section>
 
-    <!-- (Optional) Editor – wird erst nach Freischaltung sichtbar gemacht -->
+    <!-- Editor – erst nach Freischaltung -->
     <section id="editor" class="card" style="display:none; margin-top:24px" aria-labelledby="edit-title">
       <h3 id="edit-title">Details bearbeiten</h3>
       <div class="grid">
-        <label>Datum<br><input id="e_datum" type="text" placeholder="z. B. 31.08.2025"></label>
+        <label>Datum<br><input id="e_datum" type="text" value="16.08.2025"></label>
         <label>Uhrzeit<br><input id="e_uhr" type="text" placeholder="z. B. 10:30"></label>
-        <label>Treffpunkt<br><input id="e_ort" type="text" placeholder="z. B. Bootsanleger XY, Stadt"></label>
-        <label>Route<br><input id="e_route" type="text" placeholder="z. B. Flussabschnitt A → B"></label>
-        <label>Dauer<br><input id="e_dauer" type="text" placeholder="z. B. ca. 4 Stunden"></label>
-        <label>Mitbringen<br><input id="e_mitbringen" type="text" placeholder="Liste"></label>
-        <label>Verpflegung<br><input id="e_snacks" type="text" placeholder="z. B. Picknick übernehmen wir"></label>
-        <label>Wetter-Backup<br><input id="e_backup" type="text" placeholder="z. B. Termin wird verschoben"></label>
+        <label>Treffpunkt<br><input id="e_ort" type="text" value="Isarufer, München (genauer Treffpunkt folgt)"></label>
+        <label>Route<br><input id="e_route" type="text" value="Isar in München – Abschnitt nach Absprache"></label>
+        <label>Dauer<br><input id="e_dauer" type="text" value="ca. 3–5 Stunden inklusive Pause"></label>
+        <label>Mitbringen<br><input id="e_mitbringen" type="text" value="Sonnencreme, Wasser, Handtuch, Sonnenbrille, ggf. Wechselsachen"></label>
+        <label>Verpflegung<br><input id="e_snacks" type="text" value="Picknick & Getränke organisieren wir 🎒"></label>
+        <label>Wetter-Backup<br><input id="e_backup" type="text" value="Bei Starkregen/Unwetter verschieben wir."></label>
         <label>Kontakt<br><input id="e_kontakt" type="text" placeholder="Name + Telefonnummer"></label>
       </div>
       <div class="controls">
         <button id="saveBtn">Speichern</button>
         <button id="cancelBtn" class="secondary" type="button">Abbrechen</button>
       </div>
-      <p class="hint" style="margin-top:8px">Hinweis: Die Daten werden nur lokal im Browser gespeichert.</p>
+      <p style="opacity:.8">Hinweis: Daten werden nur lokal im Browser gespeichert.</p>
     </section>
 
   </div>
 </main>
 
-<footer>
-  Gemacht mit 💙 für Dommi. Viel Spaß auf dem Wasser!
-</footer>
+<footer>Gemacht mit 💙 für Dommi.</footer>
 
-<!-- Template mit allen Gutschein-Details – wird erst NACH Lösung eingefügt -->
 <template id="voucherTpl">
   <div class="content-inner">
     <div>
-      <p>Herzlichen Glückwunsch! Das Geheimnis ist gelüftet: Es geht auf eine <strong>Schlauchboottour</strong>! 🚤🌊</p>
+      <p>Großartig! Geheimnis gelüftet: Es geht auf eine <strong>Schlauchboottour</strong>! 🚤🌊</p>
       <ul class="voucher-list gift-info">
         <li><strong>Anlass:</strong> Dommis wunderbare Schlauchboottour</li>
-        <li><strong>Datum:</strong> <span id="v_datum">TT.MM.JJJJ</span></li>
+        <li><strong>Datum:</strong> <span id="v_datum">16.08.2025</span></li>
         <li><strong>Uhrzeit:</strong> <span id="v_uhr">HH:MM</span></li>
-        <li><strong>Treffpunkt:</strong> <span id="v_ort">[Treffpunkt, Ufer, Stadt]</span></li>
-        <li><strong>Route:</strong> <span id="v_route">[z. B. Flussabschnitt von … nach …]</span></li>
+        <li><strong>Treffpunkt:</strong> <span id="v_ort">Isarufer, München (genauer Treffpunkt folgt)</span></li>
+        <li><strong>Route:</strong> <span id="v_route">Isar in München – Abschnitt nach Absprache</span></li>
         <li><strong>Dauer:</strong> <span id="v_dauer">ca. 3–5 Stunden inklusive Pause</span></li>
         <li><strong>Mitbringen:</strong> <span id="v_mitbringen">Sonnencreme, Wasser, Handtuch, Sonnenbrille, ggf. Wechselsachen</span></li>
         <li><strong>Verpflegung:</strong> <span id="v_snacks">Picknick & Getränke organisieren wir 🎒</span></li>
-        <li><strong>Wetter-Backup:</strong> <span id="v_backup">Bei Starkregen/Unwetter verschieben wir auf den nächstmöglichen Termin.</span></li>
+        <li><strong>Wetter-Backup:</strong> <span id="v_backup">Bei Starkregen/Unwetter verschieben wir.</span></li>
         <li><strong>Kontakt:</strong> <span id="v_kontakt">[Name + Telefonnummer]</span></li>
       </ul>
     </div>
     <div>
-      <div class="card" style="background:#0b2744;border-color:#184f73">
-        <h3 style="margin-top:0">Kleine Karte & Regeln an Bord</h3>
-        <p>⛺️ <em>Safety first:</em> Schwimmwesten sind an Bord. Bitte im strömenden Abschnitt tragen.<br>
-           🧭 Bleib in Rufweite, keine wilden Ausstiege. <br>
-           🧴 Sonnenschutz & Wasser trinken. <br>
-           📸 Fotos erwünscht!<br>
-           ♻️ Alles, was wir mitbringen, nehmen wir wieder mit.</p>
-      </div>
       <div class="controls">
         <button id="printBtn" class="secondary" type="button">Gutschein drucken</button>
         <button id="editBtn" class="secondary" type="button">Details anpassen</button>
@@ -224,88 +246,108 @@
 <script>
 (function(){
   const EXPECTED_WORD = "SCHLAUCHBOOT";
-  const EXPECTED_CODE = "3214"; // Enten=3, Paddel=2, Ringe=1, Wellen-Gruppen=4
+  const EXPECTED_CODE = "3214"; // 3 Enten, 2 Paddel, 1 Ring, 4 Wellengruppen
+  const TARGET_NUM = Math.PI*Math.PI/6; // ≈1.64493406685
+  const TOL = 1e-6;
 
-  let solved1 = false;
-  let solved2 = false;
-  let inserted = false;
+  let solved1=false, solved2=false, solved3=false, solved4=false, solved5=false, inserted=false;
 
   const $ = sel => document.querySelector(sel);
 
-  // Puzzle 1
+  // 1
   $("#check1").addEventListener("click", () => {
     const val = $("#word").value.trim().toUpperCase().replace(/\s+/g,'');
     const status = $("#status1");
     if(val === EXPECTED_WORD){
-      solved1 = true;
-      $("#puzzle1").classList.add("solved");
-      status.textContent = "Yes! Das geheime Wort passt. 🚤";
-      status.className = "status ok";
-      celebrate();
-      unlockIfReady();
-    }else{
-      status.textContent = "Knapp vorbei. Denk an ein aufblasbares Gefährt für Flüsse.";
-      status.className = "status err";
-    }
-  });
-  $("#hint1").addEventListener("click", ()=>{
-    const status = $("#status1");
-    status.innerHTML = "Tipp: 12 Buchstaben. Ungeordnet sind sie: <strong>C, O, H, A, B, L, O, C, H, T, U, S</strong>.";
-    status.className = "status";
+      solved1 = true; $("#puzzle1").classList.add("solved");
+      status.textContent = "Richtig."; status.className = "status ok"; celebrate(); unlockIfReady();
+    }else{ status.textContent = "Nicht korrekt."; status.className = "status err"; }
   });
 
-  // Puzzle 2
+  // 2
   $("#check2").addEventListener("click", ()=>{
+    const status = $("#status2");
+    const ducks = document.querySelectorAll(".duck").length;
+    const paddles = document.querySelectorAll(".paddle").length;
+    const rings = document.querySelectorAll(".ring").length;
+    const waves = document.querySelectorAll(".waveSymbol").length;
+    const expectedDOM = `${ducks}${paddles}${rings}${waves}`;
     const val = $("#code").value.trim();
-    const status = $("#status2");
-    if(val === EXPECTED_CODE){
-      solved2 = true;
-      $("#puzzle2").classList.add("solved");
-      status.textContent = "Perfekt! Der Fluss-Code stimmt. 🌊";
-      status.className = "status ok";
-      celebrate();
-      unlockIfReady();
-    }else{
-      status.textContent = "Noch nicht. Zähle erst Enten, dann Paddel, dann Ringe, dann die Wellen-Gruppen.";
-      status.className = "status err";
-    }
+    if(val === expectedDOM && val === EXPECTED_CODE){
+      solved2 = true; $("#puzzle2").classList.add("solved");
+      status.textContent = "Korrekt."; status.className = "status ok"; celebrate(); unlockIfReady();
+    }else{ status.textContent = "Falsch."; status.className = "status err"; }
   });
-  $("#giveHint2").addEventListener("click", ()=>{
-    const status = $("#status2");
-    status.innerHTML = "Tipp: Ich sehe <strong>3</strong> Enten, <strong>2</strong> Paddel, <strong>1</strong> Ring und <strong>4</strong> Wellen-Gruppen.";
-    status.className = "status";
+
+  // 3 – Basel
+  $("#check3").addEventListener("click", ()=>{
+    const status = $("#status3");
+    const raw = $("#sumInput").value.trim();
+    if(isExactOk(raw) || isNumericOk(raw)){
+      solved3 = true; $("#puzzle3").classList.add("solved");
+      status.textContent = "Stimmt."; status.className = "status ok"; celebrate(); unlockIfReady();
+    }else{ status.textContent = "Nein."; status.className = "status err"; }
+  });
+  function isExactOk(s){
+    const t = s.toLowerCase().replace(/\s+/g,'').replace(/π/g,'pi');
+    return /^\(?pi\^?2\)?\/6$/.test(t) || /^pipi\/6$/.test(t) || /^\(?pi\*pi\)?\/6$/.test(t);
+  }
+  function isNumericOk(s){
+    const n = Number(s.replace(',','.'));
+    return Number.isFinite(n) && Math.abs(n - TARGET_NUM) <= TOL;
+  }
+
+  // 4 – ε–δ
+  $("#check4f").addEventListener("click", ()=>{
+    const status = $("#status4");
+    const t = $("#deltaFormula").value.trim().toLowerCase()
+      .replace(/\s+/g,'').replace(/δ/g,'delta').replace(/ε/g,'epsilon');
+    const ok = /(^|=)\(?epsilon\)?\/3$/.test(t) || /(^|=)\(?e\)?\/3$/.test(t);
+    if(ok){
+      solved4 = true; $("#puzzle4").classList.add("solved");
+      status.textContent = "Formel akzeptiert: δ(ε)=ε/3."; status.className = "status ok"; celebrate(); unlockIfReady();
+    }else{ status.textContent = "Diese Formel akzeptiere ich hier nicht."; status.className = "status err"; }
+  });
+  $("#check4n").addEventListener("click", ()=>{
+    const status = $("#status4");
+    const eps = Number($("#epsNum").value.trim().replace(',','.'));
+    const del = Number($("#deltaNum").value.trim().replace(',','.'));
+    if(!(eps>0 && del>0 && Number.isFinite(eps) && Number.isFinite(del))){
+      status.textContent = "Ungültige Eingaben."; status.className = "status err"; return;
+    }
+    if(del <= eps/3 + 1e-12){
+      solved4 = true; $("#puzzle4").classList.add("solved");
+      status.textContent = "Numerisch ausreichend: δ ≤ ε/3."; status.className = "status ok"; celebrate(); unlockIfReady();
+    }else{ status.textContent = "Zu groß: Für f(x)=3x+1 muss δ ≤ ε/3 gelten."; status.className = "status err"; }
+  });
+
+  // 5 – Kfz
+  $("#check5").addEventListener("click", ()=>{
+    const status = $("#status5");
+    const choice = document.querySelector('input[name="kfz"]:checked')?.value;
+    if(!choice){ status.textContent = "Bitte eine Option wählen."; status.className = "status err"; return; }
+    if(choice === "A"){
+      solved5 = true; $("#puzzle5").classList.add("solved");
+      status.textContent = "Richtig."; status.className = "status ok"; celebrate(); unlockIfReady();
+    }else{ status.textContent = "Falsch."; status.className = "status err"; }
   });
 
   function unlockIfReady(){
-    if(solved1 && solved2 && !inserted){
+    if(solved1 && solved2 && solved3 && solved4 && solved5 && !inserted){
       inserted = true;
-
-      // Inhalt aus Template einfügen
-      const tpl = $("#voucherTpl");
-      const fragment = tpl.content.cloneNode(true);
+      const frag = $("#voucherTpl").content.cloneNode(true);
       const target = $("#voucherContent");
-      target.appendChild(fragment);
-
-      // gespeicherte Werte wiederherstellen
+      target.appendChild(frag);
       restoreVoucherValues();
-
-      // UI anzeigen
       $("#lock").style.display = "none";
       target.classList.add("show");
       target.setAttribute("aria-hidden","false");
-
-      // Titel nachträglich anpassen (optional – verrät erst jetzt das Ziel)
       document.title = "Dommis wunderbare Schlauchboottour";
-
-      // Buttons verdrahten
       $("#printBtn")?.addEventListener("click", ()=> window.print());
-      $("#editBtn")?.addEventListener("click", ()=>{
-        $("#editor").style.display="block";
-        scrollToSection("#editor");
-        fillEditorFromVoucher();
-      });
+      $("#editBtn")?.addEventListener("click", ()=>{ $("#editor").style.display="block"; fillEditorFromVoucher(); window.scrollTo({top:document.body.scrollHeight,behavior:"smooth"}); });
       $("#cancelBtn")?.addEventListener("click", ()=> { $("#editor").style.display="none"; });
       $("#saveBtn")?.addEventListener("click", saveFromEditor);
+      celebrate(260);
     }
   }
 
@@ -318,7 +360,6 @@
     });
     $("#editor").style.display="none";
   }
-
   function fillEditorFromVoucher(){
     const fields = ["datum","uhr","ort","route","dauer","mitbringen","snacks","backup","kontakt"];
     fields.forEach(k=>{
@@ -327,9 +368,7 @@
       $("#e_"+k).value = val;
     });
   }
-
   function restoreVoucherValues(){
-    // Wird erst nach dem Einfügen des Templates aufgerufen
     const fields = ["datum","uhr","ort","route","dauer","mitbringen","snacks","backup","kontakt"];
     fields.forEach(k=>{
       const saved = localStorage.getItem("v_"+k);
@@ -337,36 +376,17 @@
     });
   }
 
-  function scrollToSection(sel){
-    const el = $(sel);
-    if(!el) return;
-    el.scrollIntoView({behavior:"smooth", block:"start"});
-  }
-
-  // Einfacher Konfetti-Effekt
-  const canvas = $("#confetti");
-  const ctx = canvas.getContext("2d");
+  // Konfetti
+  const canvas = $("#confetti"); const ctx = canvas.getContext("2d");
   let confetti = [];
   function resize(){ canvas.width = innerWidth; canvas.height = innerHeight; }
   window.addEventListener("resize", resize); resize();
-
-  function makePiece(){
-    return {
-      x: Math.random()*canvas.width, y: -20, r: 6 + Math.random()*8,
-      vx: -2 + Math.random()*4, vy: 2 + Math.random()*3,
-      rot: Math.random()*Math.PI, vr: -0.2 + Math.random()*0.4,
-      ttl: 120 + Math.random()*120, hue: Math.floor(180 + Math.random()*160)
-    }
-  }
+  function makePiece(){ return { x: Math.random()*canvas.width, y: -20, r: 6+Math.random()*8, vx: -2+Math.random()*4, vy: 2+Math.random()*3, rot: Math.random()*Math.PI, vr: -0.2+Math.random()*0.4, ttl: 120+Math.random()*120, hue: Math.floor(180+Math.random()*160) }; }
   function celebrate(count=180){ for(let i=0;i<count;i++) confetti.push(makePiece()); }
   function tick(){
     ctx.clearRect(0,0,canvas.width,canvas.height);
     confetti = confetti.filter(p=>p.ttl>0);
-    confetti.forEach(p=>{
-      p.ttl--; p.x += p.vx; p.y += p.vy; p.rot += p.vr;
-      ctx.save(); ctx.translate(p.x,p.y); ctx.rotate(p.rot);
-      ctx.fillStyle = `hsl(${p.hue} 80% 60%)`; ctx.fillRect(-p.r/2,-p.r/2,p.r,p.r); ctx.restore();
-    });
+    confetti.forEach(p=>{ p.ttl--; p.x+=p.vx; p.y+=p.vy; p.rot+=p.vr; ctx.save(); ctx.translate(p.x,p.y); ctx.rotate(p.rot); ctx.fillStyle = `hsl(${p.hue} 80% 60%)`; ctx.fillRect(-p.r/2,-p.r/2,p.r,p.r); ctx.restore(); });
     requestAnimationFrame(tick);
   }
   tick();
