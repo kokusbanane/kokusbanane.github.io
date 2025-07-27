@@ -4,7 +4,7 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Dommis wunderbares Abenteuer</title>
-<meta name="description" content="Überraschungs-Geschenkseite mit zwei Rätseln. Löse sie, um das Ziel und den Gutschein freizuschalten." />
+<meta name="description" content="Überraschungs-Geschenkseite mit zwei Rätseln. Nach dem Lösen werden Ziel und Gutschein sichtbar." />
 <style>
   :root{
     --bg:#0e2a47; --fg:#ffffff; --accent:#00c2ff; --accent2:#ffd166; --ok:#51d88a; --warn:#ff6b6b;
@@ -36,8 +36,6 @@
   h2{margin:0 0 12px; font-size:clamp(1.4rem,3vw,2rem)}
   h3{margin:0 0 8px}
   .badge{display:inline-block; padding:6px 12px; border-radius:999px; background:#073356; color:#ccefff; font-size:.95rem; border:1px solid #0e5581;}
-  .gift-info li{margin:6px 0}
-  ul{padding-left:1.2rem}
   .puzzle{position:relative;border-left:4px solid var(--accent);padding:24px;background:#0c2743;border-radius:12px}
   .puzzle.solved{border-left-color:var(--ok); background:#0f304f}
   .status{margin-top:10px; font-weight:600}
@@ -58,8 +56,9 @@
   .symbols{font-size:2rem; line-height:1.4; display:flex; flex-wrap:wrap; gap:12px; margin:12px 0;}
   .symbols span{filter: drop-shadow(0 4px 8px rgba(0,0,0,.35))}
   .hint{font-size:.95rem; opacity:.9}
+
+  /* Gutschein */
   #voucher{margin-top:24px; position:relative; overflow:hidden; border:2px dashed #2a6a8f; border-radius:18px; background:#0a233b;}
-  #voucher .content{padding:28px; display:grid; gap:16px; grid-template-columns:1.1fr 0.9fr;}
   #voucher h2{font-size:1.8rem}
   .stamp{
     position:absolute; right:-24px; top:-24px; rotate:-15deg; width:200px; aspect-ratio:1/1; border-radius:50%;
@@ -67,13 +66,20 @@
     text-transform:uppercase; letter-spacing:.08em; background:transparent; mix-blend-mode:screen; opacity:.9;
   }
   .stamp small{display:block; font-weight:600; letter-spacing:.15em}
-  .voucher-list li{margin:6px 0}
-  .reveal{display:none; margin-top:18px;}
-  .reveal.show{display:block}
   .lock{padding:16px; border-radius:12px; background:#0d2946; border:1px solid #184f73; margin-top:12px; text-align:center}
+  .content{display:none}
+  .content.show{display:block}
+  #voucher .content-inner{padding:28px; display:grid; gap:16px; grid-template-columns:1.1fr 0.9fr;}
+  .voucher-list li{margin:6px 0}
+  .controls{display:flex; gap:12px; flex-wrap:wrap; margin-top:16px}
+
   #confetti{position:fixed; inset:0; pointer-events:none; z-index:999}
   footer{text-align:center; opacity:.75; font-size:.95rem; padding:40px 16px 64px;}
-  @media (max-width:780px){#voucher .content{grid-template-columns:1fr} .stamp{width:160px}}
+
+  @media (max-width:780px){
+    #voucher .content-inner{grid-template-columns:1fr}
+    .stamp{width:160px}
+  }
   @media print{
     body{background:white;color:black}
     header, .lock, .controls, #confetti{display:none !important}
@@ -138,7 +144,7 @@
       </article>
     </section>
 
-    <!-- Gutschein -->
+    <!-- Gutschein (ohne Details, die werden erst injiziert) -->
     <section id="voucher" class="card" aria-labelledby="voucher-title">
       <div class="stamp" aria-hidden="true">
         <div>Gutschein<br><small>für Dommi</small></div>
@@ -146,43 +152,13 @@
       <h2 id="voucher-title">Der Gutschein</h2>
 
       <div class="lock" id="lock">
-        <p>Die Details sind noch versiegelt. Löse beide Rätsel – oder nutze die <button id="bypass" class="secondary">Notlösung</button>.</p>
+        <p>Die Details sind versiegelt. Sie erscheinen automatisch, sobald beide Rätsel gelöst sind.</p>
       </div>
 
-      <div class="content reveal" id="voucherContent" aria-hidden="true">
-        <div>
-          <p>Herzlichen Glückwunsch! Das Geheimnis ist gelüftet: Es geht auf eine <strong>Schlauchboottour</strong>! 🚤🌊</p>
-          <ul class="voucher-list gift-info">
-            <li><strong>Anlass:</strong> Dommis wunderbare Schlauchboottour</li>
-            <li><strong>Datum:</strong> <span id="v_datum">TT.MM.JJJJ</span></li>
-            <li><strong>Uhrzeit:</strong> <span id="v_uhr">HH:MM</span></li>
-            <li><strong>Treffpunkt:</strong> <span id="v_ort">[Treffpunkt, Ufer, Stadt]</span></li>
-            <li><strong>Route:</strong> <span id="v_route">[z. B. Flussabschnitt von … nach …]</span></li>
-            <li><strong>Dauer:</strong> <span id="v_dauer">ca. 3–5 Stunden inklusive Pause</span></li>
-            <li><strong>Mitbringen:</strong> <span id="v_mitbringen">Sonnencreme, Wasser, Handtuch, Sonnenbrille, ggf. Wechselsachen</span></li>
-            <li><strong>Verpflegung:</strong> <span id="v_snacks">Picknick & Getränke organisieren wir 🎒</span></li>
-            <li><strong>Wetter-Backup:</strong> <span id="v_backup">Bei Starkregen/Unwetter verschieben wir auf den nächstmöglichen Termin.</span></li>
-            <li><strong>Kontakt:</strong> <span id="v_kontakt">[Name + Telefonnummer]</span></li>
-          </ul>
-        </div>
-        <div>
-          <div class="card" style="background:#0b2744;border-color:#184f73">
-            <h3 style="margin-top:0">Kleine Karte & Regeln an Bord</h3>
-            <p>⛺️ <em>Safety first:</em> Schwimmwesten sind an Bord. Bitte im strömenden Abschnitt tragen.<br>
-               🧭 Bleib in Rufweite, keine wilden Ausstiege. <br>
-               🧴 Sonnenschutz & Wasser trinken. <br>
-               📸 Fotos erwünscht!<br>
-               ♻️ Alles, was wir mitbringen, nehmen wir wieder mit.</p>
-          </div>
-          <div class="controls" style="margin-top:16px; display:flex; gap:12px; flex-wrap:wrap">
-            <button id="printBtn" class="secondary" type="button">Gutschein drucken</button>
-            <button id="editBtn" class="secondary" type="button">Details anpassen</button>
-          </div>
-        </div>
-      </div>
+      <div id="voucherContent" class="content" aria-hidden="true"></div>
     </section>
 
-    <!-- Bearbeitungsdialog -->
+    <!-- (Optional) Editor – wird erst nach Freischaltung sichtbar gemacht -->
     <section id="editor" class="card" style="display:none; margin-top:24px" aria-labelledby="edit-title">
       <h3 id="edit-title">Details bearbeiten</h3>
       <div class="grid">
@@ -196,7 +172,7 @@
         <label>Wetter-Backup<br><input id="e_backup" type="text" placeholder="z. B. Termin wird verschoben"></label>
         <label>Kontakt<br><input id="e_kontakt" type="text" placeholder="Name + Telefonnummer"></label>
       </div>
-      <div style="margin-top:16px; display:flex; gap:12px; flex-wrap:wrap">
+      <div class="controls">
         <button id="saveBtn">Speichern</button>
         <button id="cancelBtn" class="secondary" type="button">Abbrechen</button>
       </div>
@@ -210,6 +186,41 @@
   Gemacht mit 💙 für Dommi. Viel Spaß auf dem Wasser!
 </footer>
 
+<!-- Template mit allen Gutschein-Details – wird erst NACH Lösung eingefügt -->
+<template id="voucherTpl">
+  <div class="content-inner">
+    <div>
+      <p>Herzlichen Glückwunsch! Das Geheimnis ist gelüftet: Es geht auf eine <strong>Schlauchboottour</strong>! 🚤🌊</p>
+      <ul class="voucher-list gift-info">
+        <li><strong>Anlass:</strong> Dommis wunderbare Schlauchboottour</li>
+        <li><strong>Datum:</strong> <span id="v_datum">TT.MM.JJJJ</span></li>
+        <li><strong>Uhrzeit:</strong> <span id="v_uhr">HH:MM</span></li>
+        <li><strong>Treffpunkt:</strong> <span id="v_ort">[Treffpunkt, Ufer, Stadt]</span></li>
+        <li><strong>Route:</strong> <span id="v_route">[z. B. Flussabschnitt von … nach …]</span></li>
+        <li><strong>Dauer:</strong> <span id="v_dauer">ca. 3–5 Stunden inklusive Pause</span></li>
+        <li><strong>Mitbringen:</strong> <span id="v_mitbringen">Sonnencreme, Wasser, Handtuch, Sonnenbrille, ggf. Wechselsachen</span></li>
+        <li><strong>Verpflegung:</strong> <span id="v_snacks">Picknick & Getränke organisieren wir 🎒</span></li>
+        <li><strong>Wetter-Backup:</strong> <span id="v_backup">Bei Starkregen/Unwetter verschieben wir auf den nächstmöglichen Termin.</span></li>
+        <li><strong>Kontakt:</strong> <span id="v_kontakt">[Name + Telefonnummer]</span></li>
+      </ul>
+    </div>
+    <div>
+      <div class="card" style="background:#0b2744;border-color:#184f73">
+        <h3 style="margin-top:0">Kleine Karte & Regeln an Bord</h3>
+        <p>⛺️ <em>Safety first:</em> Schwimmwesten sind an Bord. Bitte im strömenden Abschnitt tragen.<br>
+           🧭 Bleib in Rufweite, keine wilden Ausstiege. <br>
+           🧴 Sonnenschutz & Wasser trinken. <br>
+           📸 Fotos erwünscht!<br>
+           ♻️ Alles, was wir mitbringen, nehmen wir wieder mit.</p>
+      </div>
+      <div class="controls">
+        <button id="printBtn" class="secondary" type="button">Gutschein drucken</button>
+        <button id="editBtn" class="secondary" type="button">Details anpassen</button>
+      </div>
+    </div>
+  </div>
+</template>
+
 <script>
 (function(){
   const EXPECTED_WORD = "SCHLAUCHBOOT";
@@ -217,6 +228,8 @@
 
   let solved1 = false;
   let solved2 = false;
+  let inserted = false;
+
   const $ = sel => document.querySelector(sel);
 
   // Puzzle 1
@@ -237,8 +250,7 @@
   });
   $("#hint1").addEventListener("click", ()=>{
     const status = $("#status1");
-    // durcheinander gewürfelt, ohne das Wort auszuschreiben
-    status.innerHTML = "Tipp: 12 Buchstaben. Ungeordnet sind sie hier: <strong>C, O, H, A, B, L, O, C, H, T, U, S</strong>.";
+    status.innerHTML = "Tipp: 12 Buchstaben. Ungeordnet sind sie: <strong>C, O, H, A, B, L, O, C, H, T, U, S</strong>.";
     status.className = "status";
   });
 
@@ -264,34 +276,40 @@
     status.className = "status";
   });
 
-  // Notlösung
-  $("#bypass").addEventListener("click", ()=>{
-    const sure = confirm("Willst du die Details wirklich ohne Rätsel anzeigen?");
-    if(sure){
-      solved1 = solved2 = true;
-      $("#puzzle1").classList.add("solved");
-      $("#puzzle2").classList.add("solved");
-      unlockIfReady();
-    }
-  });
-
   function unlockIfReady(){
-    if(solved1 && solved2){
+    if(solved1 && solved2 && !inserted){
+      inserted = true;
+
+      // Inhalt aus Template einfügen
+      const tpl = $("#voucherTpl");
+      const fragment = tpl.content.cloneNode(true);
+      const target = $("#voucherContent");
+      target.appendChild(fragment);
+
+      // gespeicherte Werte wiederherstellen
+      restoreVoucherValues();
+
+      // UI anzeigen
       $("#lock").style.display = "none";
-      const content = $("#voucherContent");
-      content.classList.add("show");
-      content.setAttribute("aria-hidden","false");
+      target.classList.add("show");
+      target.setAttribute("aria-hidden","false");
+
+      // Titel nachträglich anpassen (optional – verrät erst jetzt das Ziel)
+      document.title = "Dommis wunderbare Schlauchboottour";
+
+      // Buttons verdrahten
+      $("#printBtn")?.addEventListener("click", ()=> window.print());
+      $("#editBtn")?.addEventListener("click", ()=>{
+        $("#editor").style.display="block";
+        scrollToSection("#editor");
+        fillEditorFromVoucher();
+      });
+      $("#cancelBtn")?.addEventListener("click", ()=> { $("#editor").style.display="none"; });
+      $("#saveBtn")?.addEventListener("click", saveFromEditor);
     }
   }
 
-  // Drucken
-  $("#printBtn")?.addEventListener("click", ()=> window.print());
-
-  // Editor öffnen/schließen
-  $("#editBtn")?.addEventListener("click", ()=> { $("#editor").style.display="block"; scrollToSection("#editor"); fillEditorFromVoucher(); });
-  $("#cancelBtn")?.addEventListener("click", ()=> { $("#editor").style.display="none"; });
-
-  $("#saveBtn")?.addEventListener("click", ()=>{
+  function saveFromEditor(){
     const fields = ["datum","uhr","ort","route","dauer","mitbringen","snacks","backup","kontakt"];
     fields.forEach(k=>{
       const src = $("#e_"+k).value || $("#v_"+k).textContent;
@@ -299,27 +317,33 @@
       localStorage.setItem("v_"+k, src);
     });
     $("#editor").style.display="none";
-  });
+  }
 
   function fillEditorFromVoucher(){
     const fields = ["datum","uhr","ort","route","dauer","mitbringen","snacks","backup","kontakt"];
     fields.forEach(k=>{
       const saved = localStorage.getItem("v_"+k);
-      const val = saved ?? $("#v_"+k).textContent;
+      const val = saved ?? $("#v_"+k)?.textContent ?? "";
       $("#e_"+k).value = val;
     });
   }
 
-  // Beim Laden gespeicherte Werte einsetzen
-  (function restore(){
+  function restoreVoucherValues(){
+    // Wird erst nach dem Einfügen des Templates aufgerufen
     const fields = ["datum","uhr","ort","route","dauer","mitbringen","snacks","backup","kontakt"];
     fields.forEach(k=>{
       const saved = localStorage.getItem("v_"+k);
-      if(saved) $("#v_"+k).textContent = saved;
+      if(saved && $("#v_"+k)) $("#v_"+k).textContent = saved;
     });
-  })();
+  }
 
-  // Konfetti
+  function scrollToSection(sel){
+    const el = $(sel);
+    if(!el) return;
+    el.scrollIntoView({behavior:"smooth", block:"start"});
+  }
+
+  // Einfacher Konfetti-Effekt
   const canvas = $("#confetti");
   const ctx = canvas.getContext("2d");
   let confetti = [];
