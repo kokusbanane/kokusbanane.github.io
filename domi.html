@@ -3,73 +3,44 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Dommis wunderbare Schlauchboottour</title>
-<meta name="description" content="Geschenkseite: Dommi bekommt eine Schlauchboottour! Mit zwei kleinen Rätseln zum Freischalten des Gutscheins." />
+<title>Dommis wunderbares Abenteuer</title>
+<meta name="description" content="Überraschungs-Geschenkseite mit zwei Rätseln. Löse sie, um das Ziel und den Gutschein freizuschalten." />
 <style>
   :root{
-    --bg:#0e2a47;
-    --fg:#ffffff;
-    --accent:#00c2ff;
-    --accent2:#ffd166;
-    --ok:#51d88a;
-    --warn:#ff6b6b;
-    --ink:#0b1b2b;
-    --card:#122f50;
+    --bg:#0e2a47; --fg:#ffffff; --accent:#00c2ff; --accent2:#ffd166; --ok:#51d88a; --warn:#ff6b6b;
+    --ink:#0b1b2b; --card:#122f50;
   }
   *{box-sizing:border-box}
   html,body{margin:0;padding:0;background:linear-gradient(180deg,#0e2a47 0%, #0a223b 55%, #081b30 100%);
     color:var(--fg); font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;}
   a{color:var(--accent)}
-  header{
-    position:relative; text-align:center; padding:64px 24px 32px;
-    overflow:hidden; isolation:isolate;
-  }
-  header h1{
-    font-size: clamp(2rem, 6vw, 4rem);
-    margin:0; line-height:1.05; letter-spacing:0.01em;
-    text-shadow: 0 8px 24px rgba(0,0,0,.35);
-  }
-  header p.lead{
-    margin:16px auto 0; max-width:720px; font-size:clamp(1.05rem,2.3vw,1.35rem); opacity:.95
-  }
-  .wave{
-    position:absolute; left:0; right:0; bottom:-1px; height:120px;
+  header{position:relative; text-align:center; padding:64px 24px 32px; overflow:hidden; isolation:isolate;}
+  header h1{font-size: clamp(2rem, 6vw, 4rem); margin:0; line-height:1.05; letter-spacing:0.01em;
+    text-shadow: 0 8px 24px rgba(0,0,0,.35);}
+  header p.lead{margin:16px auto 0; max-width:720px; font-size:clamp(1.05rem,2.3vw,1.35rem); opacity:.95}
+  .wave{position:absolute; left:0; right:0; bottom:-1px; height:120px;
     background:
       radial-gradient(circle at 10% 40%, #0f3357 0 12%, transparent 13%),
       radial-gradient(circle at 30% 60%, #0f3357 0 14%, transparent 15%),
       radial-gradient(circle at 60% 45%, #0f3357 0 13%, transparent 14%),
       radial-gradient(circle at 85% 70%, #0f3357 0 12%, transparent 13%);
-    opacity:.8; filter: blur(2px);
-  }
-
+    opacity:.8; filter: blur(2px);}
   main{padding:24px}
   .container{max-width:1000px;margin-inline:auto}
   .card{
     background:color-mix(in srgb, var(--card) 92%, #fff 8%);
     border:1px solid color-mix(in srgb, var(--accent) 15%, #000 85%);
-    border-radius:18px; padding:24px; box-shadow:0 12px 40px rgba(0,0,0,.25);
-    backdrop-filter: blur(4px);
+    border-radius:18px; padding:24px; box-shadow:0 12px 40px rgba(0,0,0,.25); backdrop-filter: blur(4px);
   }
-  .grid{
-    display:grid; gap:24px;
-    grid-template-columns: repeat(auto-fit, minmax(280px,1fr));
-  }
-
+  .grid{display:grid; gap:24px; grid-template-columns: repeat(auto-fit, minmax(280px,1fr));}
   h2{margin:0 0 12px; font-size:clamp(1.4rem,3vw,2rem)}
   h3{margin:0 0 8px}
-  .badge{
-    display:inline-block; padding:6px 12px; border-radius:999px; background:#073356; color:#ccefff; font-size:.95rem; border:1px solid #0e5581;
-  }
-
+  .badge{display:inline-block; padding:6px 12px; border-radius:999px; background:#073356; color:#ccefff; font-size:.95rem; border:1px solid #0e5581;}
   .gift-info li{margin:6px 0}
   ul{padding-left:1.2rem}
-
-  /* Rätsel */
   .puzzle{position:relative;border-left:4px solid var(--accent);padding:24px;background:#0c2743;border-radius:12px}
   .puzzle.solved{border-left-color:var(--ok); background:#0f304f}
-  .status{
-    margin-top:10px; font-weight:600
-  }
+  .status{margin-top:10px; font-weight:600}
   .status.ok{color:var(--ok)}
   .status.err{color:var(--warn)}
   .input-row{display:flex;gap:12px;flex-wrap:wrap}
@@ -82,56 +53,27 @@
     background:linear-gradient(90deg, var(--accent) 0%, #4dd8ff 100%); color:#002033;
     box-shadow:0 8px 24px rgba(0,0,0,.25);
   }
-  button.secondary{
-    background:#0f3a5f; color:#d7f4ff; border:1px solid #1a638f; box-shadow:none;
-  }
+  button.secondary{background:#0f3a5f; color:#d7f4ff; border:1px solid #1a638f; box-shadow:none;}
   button:disabled{opacity:.55; cursor:not-allowed}
-
-  .symbols{
-    font-size:2rem; line-height:1.4; display:flex; flex-wrap:wrap; gap:12px; margin:12px 0;
-  }
+  .symbols{font-size:2rem; line-height:1.4; display:flex; flex-wrap:wrap; gap:12px; margin:12px 0;}
   .symbols span{filter: drop-shadow(0 4px 8px rgba(0,0,0,.35))}
   .hint{font-size:.95rem; opacity:.9}
-
-  /* Gutschein */
-  #voucher{
-    margin-top:24px; position:relative; overflow:hidden;
-    border:2px dashed #2a6a8f; border-radius:18px; background:#0a233b;
-  }
-  #voucher .content{
-    padding:28px;
-    display:grid; gap:16px; grid-template-columns:1.1fr 0.9fr;
-  }
+  #voucher{margin-top:24px; position:relative; overflow:hidden; border:2px dashed #2a6a8f; border-radius:18px; background:#0a233b;}
+  #voucher .content{padding:28px; display:grid; gap:16px; grid-template-columns:1.1fr 0.9fr;}
   #voucher h2{font-size:1.8rem}
   .stamp{
-    position:absolute; right:-24px; top:-24px; rotate:-15deg;
-    width:200px; aspect-ratio:1/1; border-radius:50%;
-    border:6px solid #ffd166; color:#ffd166; display:grid; place-items:center;
-    font-weight:800; text-align:center; text-transform:uppercase; letter-spacing:.08em;
-    background:transparent; mix-blend-mode:screen; opacity:.9;
+    position:absolute; right:-24px; top:-24px; rotate:-15deg; width:200px; aspect-ratio:1/1; border-radius:50%;
+    border:6px solid #ffd166; color:#ffd166; display:grid; place-items:center; font-weight:800; text-align:center;
+    text-transform:uppercase; letter-spacing:.08em; background:transparent; mix-blend-mode:screen; opacity:.9;
   }
   .stamp small{display:block; font-weight:600; letter-spacing:.15em}
   .voucher-list li{margin:6px 0}
-  .reveal{
-    display:none; margin-top:18px;
-  }
+  .reveal{display:none; margin-top:18px;}
   .reveal.show{display:block}
-  .lock{
-    padding:16px; border-radius:12px; background:#0d2946; border:1px solid #184f73; margin-top:12px; text-align:center
-  }
-
-  /* Canvas Konfetti */
+  .lock{padding:16px; border-radius:12px; background:#0d2946; border:1px solid #184f73; margin-top:12px; text-align:center}
   #confetti{position:fixed; inset:0; pointer-events:none; z-index:999}
-
-  footer{
-    text-align:center; opacity:.75; font-size:.95rem; padding:40px 16px 64px;
-  }
-
-  @media (max-width:780px){
-    #voucher .content{grid-template-columns:1fr}
-    .stamp{width:160px}
-  }
-
+  footer{text-align:center; opacity:.75; font-size:.95rem; padding:40px 16px 64px;}
+  @media (max-width:780px){#voucher .content{grid-template-columns:1fr} .stamp{width:160px}}
   @media print{
     body{background:white;color:black}
     header, .lock, .controls, #confetti{display:none !important}
@@ -145,9 +87,8 @@
 <canvas id="confetti"></canvas>
 
 <header>
-  <h1>Dommis wunderbare Schlauchboottour</h1>
-  <p class="lead">Überraschung! Diese Seite ist deine Gutscheinkarte. Löse zwei kleine Rätsel und schalte den Gutschein frei.
-    Danach erfährst du, wann, wo und mit wem wir gemeinsam in See — äh, in den <strong>Fluss</strong> — stechen.</p>
+  <h1>Dommis wunderbares Abenteuer</h1>
+  <p class="lead">Überraschung! Diese Seite ist deine Gutscheinkarte. Löse zwei kleine Rätsel – dann werden <strong>Ziel</strong> und alle Details enthüllt.</p>
   <div class="wave" aria-hidden="true"></div>
 </header>
 
@@ -155,22 +96,19 @@
   <div class="container">
     <section class="card" aria-labelledby="intro-title">
       <h2 id="intro-title">Ahoi, Dommi! ⚓️</h2>
-      <p>Du bist eingeladen zu einer <strong>gemütlichen Schlauchboottour</strong> mit kleiner Picknick-Pause, guter Musik
-         und bester Gesellschaft. Pack Sonnencreme, Sonnenbrille und Abenteuerlust ein – um den Rest kümmern wir uns.
-         Doch zuerst gilt es, die geheime Karte zu entsiegeln …</p>
+      <p>Wir planen ein <strong>feucht-fröhliches Wasserabenteuer</strong> mit Picknick, Musik und bester Crew. Pack Sonnencreme, Sonnenbrille und Entdeckergeist ein – um den Rest kümmern wir uns. Erstmal heißt es aber: die Geheimnisse der Karte knacken …</p>
       <span class="badge">2 Rätsel · 1 Abenteuer</span>
     </section>
 
     <section class="grid" style="margin-top:24px">
       <!-- Puzzle 1 -->
       <article class="puzzle" id="puzzle1" aria-labelledby="p1-title">
-        <h3 id="p1-title">Rätsel 1 – Das Zauberwort</h3>
-        <p>Ohne das richtige Wort bewegt sich kein Boot. Setze die Buchstaben in Gedanken zusammen
-           und tippe das gesuchte Wort ein.</p>
-        <p class="hint">Hinweis: Es enthält alle diese Buchstaben – <em>S, C, H, L, A, U, C, H, B, O, O, T</em>.</p>
+        <h3 id="p1-title">Rätsel 1 – Das geheime Wort</h3>
+        <p>Finde das Wort, das unser Gefährt beschreibt. 12 Buchstaben – sobald du es kennst, öffnet sich der Weg.</p>
+        <p class="hint">Hinweis: Es ist ein <em>aufblasbares Wassergefährt</em>. Tippe das Wort ohne Leerzeichen.</p>
         <div class="input-row">
-          <label for="word" class="sr-only">Zauberwort</label>
-          <input id="word" type="text" autocomplete="off" placeholder="Zauberwort eingeben …" />
+          <label for="word" class="sr-only">Geheimes Wort</label>
+          <input id="word" type="text" autocomplete="off" placeholder="Geheimes Wort eingeben …" />
           <button id="check1">Prüfen</button>
           <button id="hint1" class="secondary" type="button">Tipp anzeigen</button>
         </div>
@@ -182,25 +120,15 @@
         <h3 id="p2-title">Rätsel 2 – Der Fluss-Code</h3>
         <p>Finde den vierstelligen Code. Er lautet: <strong>Enten – Paddel – Rettungsringe – Wellen</strong>.</p>
         <div class="symbols" aria-hidden="true" id="symbolField">
-          <!-- Enten -->
-          <span class="duck">🦆</span>
-          <span class="duck">🦆</span>
-          <span class="duck">🦆</span>
-
-          <!-- Paddel (Canoe emoji als Paddel-Ersatz) -->
-          <span class="paddle">🛶</span>
-          <span class="paddle">🛶</span>
-
-          <!-- Rettungsringe -->
+          <span class="duck">🦆</span><span class="duck">🦆</span><span class="duck">🦆</span>
+          <span class="paddle">🛶</span><span class="paddle">🛶</span>
           <span class="ring">🛟</span>
-
-          <!-- Wellen-Gruppen -->
           <span class="waveSymbol">🌊🌊</span>
           <span class="waveSymbol">🌊</span>
           <span class="waveSymbol">🌊🌊🌊</span>
           <span class="waveSymbol">🌊</span>
         </div>
-        <p class="hint">Zähle die Anzahl der <em>Symbole/Gruppen</em>, nicht die einzelnen Wellen-Emoji innerhalb einer Gruppe.</p>
+        <p class="hint">Zähle die Anzahl der <em>Symbole/Gruppen</em>, nicht die einzelnen Wellen innerhalb einer Gruppe.</p>
         <div class="input-row">
           <input id="code" type="text" inputmode="numeric" maxlength="4" placeholder="z. B. 3214" />
           <button id="check2">Code prüfen</button>
@@ -223,7 +151,7 @@
 
       <div class="content reveal" id="voucherContent" aria-hidden="true">
         <div>
-          <p>Herzlichen Glückwunsch! Du hast die Karte entsiegelt. 🎉</p>
+          <p>Herzlichen Glückwunsch! Das Geheimnis ist gelüftet: Es geht auf eine <strong>Schlauchboottour</strong>! 🚤🌊</p>
           <ul class="voucher-list gift-info">
             <li><strong>Anlass:</strong> Dommis wunderbare Schlauchboottour</li>
             <li><strong>Datum:</strong> <span id="v_datum">TT.MM.JJJJ</span></li>
@@ -240,9 +168,9 @@
         <div>
           <div class="card" style="background:#0b2744;border-color:#184f73">
             <h3 style="margin-top:0">Kleine Karte & Regeln an Bord</h3>
-            <p>⛺️ <em>Safety first:</em> Wir legen Schwimmwesten bereit. Bitte trage sie im Flussabschnitt mit Strömung.<br>
+            <p>⛺️ <em>Safety first:</em> Schwimmwesten sind an Bord. Bitte im strömenden Abschnitt tragen.<br>
                🧭 Bleib in Rufweite, keine wilden Ausstiege. <br>
-               🧴 Sonnenschutz & Wasser trinken nicht vergessen. <br>
+               🧴 Sonnenschutz & Wasser trinken. <br>
                📸 Fotos erwünscht!<br>
                ♻️ Alles, was wir mitbringen, nehmen wir wieder mit.</p>
           </div>
@@ -254,7 +182,7 @@
       </div>
     </section>
 
-    <!-- Bearbeitungsdialog (einfach, ohne Modal) -->
+    <!-- Bearbeitungsdialog -->
     <section id="editor" class="card" style="display:none; margin-top:24px" aria-labelledby="edit-title">
       <h3 id="edit-title">Details bearbeiten</h3>
       <div class="grid">
@@ -289,7 +217,6 @@
 
   let solved1 = false;
   let solved2 = false;
-
   const $ = sel => document.querySelector(sel);
 
   // Puzzle 1
@@ -299,18 +226,19 @@
     if(val === EXPECTED_WORD){
       solved1 = true;
       $("#puzzle1").classList.add("solved");
-      status.textContent = "Yes! Das Zauberwort ist richtig. 🚤";
+      status.textContent = "Yes! Das geheime Wort passt. 🚤";
       status.className = "status ok";
       celebrate();
       unlockIfReady();
     }else{
-      status.textContent = "Hmm, das passt noch nicht. Versuch’s mit dem langen Wassergefährt…";
+      status.textContent = "Knapp vorbei. Denk an ein aufblasbares Gefährt für Flüsse.";
       status.className = "status err";
     }
   });
   $("#hint1").addEventListener("click", ()=>{
     const status = $("#status1");
-    status.innerHTML = "Tipp: Es ist genau das, worin wir sitzen werden – ein <strong>Schlauchboot</strong>.";
+    // durcheinander gewürfelt, ohne das Wort auszuschreiben
+    status.innerHTML = "Tipp: 12 Buchstaben. Ungeordnet sind sie hier: <strong>C, O, H, A, B, L, O, C, H, T, U, S</strong>.";
     status.className = "status";
   });
 
@@ -364,7 +292,6 @@
   $("#cancelBtn")?.addEventListener("click", ()=> { $("#editor").style.display="none"; });
 
   $("#saveBtn")?.addEventListener("click", ()=>{
-    // aus Editor ins Voucher übernehmen + localStorage
     const fields = ["datum","uhr","ort","route","dauer","mitbringen","snacks","backup","kontakt"];
     fields.forEach(k=>{
       const src = $("#e_"+k).value || $("#v_"+k).textContent;
@@ -392,53 +319,29 @@
     });
   })();
 
-  function scrollToSection(sel){
-    const el = $(sel);
-    if(!el) return;
-    el.scrollIntoView({behavior:"smooth", block:"start"});
-  }
-
-  // Einfacher Konfetti-Effekt
+  // Konfetti
   const canvas = $("#confetti");
   const ctx = canvas.getContext("2d");
   let confetti = [];
-  function resize(){
-    canvas.width = innerWidth; canvas.height = innerHeight;
-  }
+  function resize(){ canvas.width = innerWidth; canvas.height = innerHeight; }
   window.addEventListener("resize", resize); resize();
 
   function makePiece(){
     return {
-      x: Math.random()*canvas.width,
-      y: -20,
-      r: 6 + Math.random()*8,
-      vx: -2 + Math.random()*4,
-      vy: 2 + Math.random()*3,
-      rot: Math.random()*Math.PI,
-      vr: -0.2 + Math.random()*0.4,
-      ttl: 120 + Math.random()*120,
-      hue: Math.floor(180 + Math.random()*160)
+      x: Math.random()*canvas.width, y: -20, r: 6 + Math.random()*8,
+      vx: -2 + Math.random()*4, vy: 2 + Math.random()*3,
+      rot: Math.random()*Math.PI, vr: -0.2 + Math.random()*0.4,
+      ttl: 120 + Math.random()*120, hue: Math.floor(180 + Math.random()*160)
     }
   }
-
-  function celebrate(count=180){
-    for(let i=0;i<count;i++) confetti.push(makePiece());
-  }
-
+  function celebrate(count=180){ for(let i=0;i<count;i++) confetti.push(makePiece()); }
   function tick(){
     ctx.clearRect(0,0,canvas.width,canvas.height);
     confetti = confetti.filter(p=>p.ttl>0);
     confetti.forEach(p=>{
-      p.ttl--;
-      p.x += p.vx;
-      p.y += p.vy;
-      p.rot += p.vr;
-      ctx.save();
-      ctx.translate(p.x,p.y);
-      ctx.rotate(p.rot);
-      ctx.fillStyle = `hsl(${p.hue} 80% 60%)`;
-      ctx.fillRect(-p.r/2,-p.r/2,p.r,p.r);
-      ctx.restore();
+      p.ttl--; p.x += p.vx; p.y += p.vy; p.rot += p.vr;
+      ctx.save(); ctx.translate(p.x,p.y); ctx.rotate(p.rot);
+      ctx.fillStyle = `hsl(${p.hue} 80% 60%)`; ctx.fillRect(-p.r/2,-p.r/2,p.r,p.r); ctx.restore();
     });
     requestAnimationFrame(tick);
   }
