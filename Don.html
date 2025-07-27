@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="de">
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Hund-Checker – Canvas + MobileNet (TF.js)</title>
+<style>
+  body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;max-width:780px;margin:0 auto;padding:24px;}
+  h1{font-size:1.6rem;margin:0 0 0.5rem;}
+  #draw{border:1px solid #ccc;border-radius:8px;touch-action:none;background:#fff;}
+  .row{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin:12px 0;}
+  button{padding:10px 16px;border-radius:6px;border:1px solid #bbb;background:#f6f6f6;cursor:pointer}
+  button:active{transform:translateY(1px)}
+  #result{margin-top:8px;font-variant-numeric:tabular-nums}
+  #secret{display:none;margin-top:16px;padding:12px;border:1px dashed #8cbf26;border-radius:8px;background:#f7ffe8;}
+  code.k{background:#f2f2f2;padding:2px 6px;border-radius:4px}
+  small.note{color:#555}
+</style>
+
+<h1>Mal’ einen Hund 🐶</h1>
+<p>Drücke <b>Prüfen</b>. Erkennt das Modell einen Hund, erscheint der Link.</p>
+
+<canvas id="draw" width="224" height="224"></canvas>
+
+<div class="row">
+  <button id="clear">Löschen</button>
+  <button id="check">Prüfen</button>
+  <label>Schwelle
+    <input id="threshold" type="number" step="0.01" min="0" max="1" value="0.30" style="width:5.5rem">
+  </label>
+</div>
+
+<div id="result">Bereit…</div>
+
+<div id="secret">
+  ✅ Hund erkannt! <a id="secretLink" href="#" rel="nofollow noopener" target="_blank">Hier ist dein Link</a>
+</div>
+
+<hr>
+<small class="note">
+  Tipp: Das Modell wurde auf Fotos trainiert. Für Skizzen sind die Wahrscheinlichkeiten oft kleiner –
+  setze die Schwelle ggf. niedriger oder zeichne mit kräftigen Linien.
+</small>
+
+<!-- TF.js & MobileNet laden -->
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest/dist/tf.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/mobilenet@2.1.0"></script>
+
+<script>
+/*** Einstellungen ***/
+const SECRET_URL = "https://example.com/dein-link"; // <— anpassen
+let THRESHOLD = parseFloat(new URLSearchParams(location.search).get("thr")) || 0.30;
+
+/*** Canvas-Zeichnen ***/
+const canvas = document.getElementById('draw');
+const ctx = canvas.getContext('2d');
+ctx.lineWidth = 12;
+ctx.lineJoin = 'round';
+ctx.lineCap = 'round';
+ctx.strokeStyle = '#000';
+
+let drawing = false;
+function getPos(e){
+  const r = canvas.getBoundingClientRect();
+  const t = e.touches ? e.touches[0] : e;
+  return { x: t.clientX - r.left, y: t.clientY - r.top };
+}
+function start(e){ drawing = true; const p = getPos(e); ctx.beginPath(); ctx.moveTo(p.x, p.y); e.preventDefault(); }
+function move(e){ if(!drawing) return; const p = getPos(e); ctx.lineTo(p.x, p.y); ctx.stroke(); e.preventDefault(); }
+function end(){ drawing = false; }
+canvas.addEventListener('pointerdown', start);
+canvas.addEventListener('pointermove', move);
+canvas.addEventListener('pointerup', end);
+canvas.addEventListener('pointerleave', end);
+canvas.addEventListener('touchstart', start, {passive:false});
+canvas.addEventListener('touchmove', move, {passive:false});
+canvas.addEventListener('touchend', end);
+
+document.getElementById('clear').onclick = () => {
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  document.getElementById('result').textContent = 'Bereit…';
+  document.getElementById('secret').style.display = 'none';
+};
+
+document.getElementById('threshold').value = THRESHOLD.toFixed(2);
+document.getElementById('threshold').addEventListener('input', e => THRESHOLD = parseFloat(e.target.value));
+
+/*** Hund-Erkennung: Tokenliste aus ImageNet-Hunderassen ***/
+const DOG_TOKENS = [
+  "dog","retriever","terrier","poodle","spaniel","shepherd","hound","bulldog","mastiff",
+  "pug","boxer","corgi","collie","chihuahua","pomeranian","papillon","pekingese","pekinese","shih tzu","shih-tzu",
+  "affenpinscher","pinscher","doberman","rottweiler","schnauzer","newfoundland","labrador","golden",
+  "malamute","husky","samoyed","akita","shiba","basenji","dalmatian","whippet","greyhound","borzoi","saluki",
+  "beagle","bloodhound","otterhound","foxhound","redbone","coonhound",
+  "weimaraner","vizsla","setter","gordon setter","irish setter","english setter","pointer",
+  "great dane","saint bernard","st. bernard","bernese","appenzeller","entlebucher","keeshond","chow",
+  "eskimo dog","tibetan mastiff","french bulldog","yorkshire terrier","yorkie","dachshund","basset","basset hound",
+  "airedale","bedlington","norfolk","norwich","deerhound","scottish deerhound","sealyham","west highland","westie",
+  "border collie","old english sheepdog","sheepdog","kelpie","komondor","briard","groenendael","malinois","tervuren","schipperke",
+  "irish wolfhound","wolfhound","bull terrier","staffordshire","bullterrier"
+].map(s => s.toLowerCase());
+
+function looksLikeDog(label){
+  const L = label.toLowerCase();
+  return DOG_TOKENS.some(tok => L.includes(tok));
+}
+
+/*** Modell laden und prüfen ***/
+let model;
+let busy = false;
+
+(async function init(){
+  document.getElementById('result').textContent = 'Lade Modell…';
+  model = await mobilenet.load(); // Default: v2, alpha=1.0, 224px
+  document.getElementById('result').textContent = 'Modell geladen. Male etwas!';
+  document.getElementById('secretLink').href = SECRET_URL;
+})();
+
+document.getElementById('check').onclick = async () => {
+  if (!model || busy) return;
+  busy = true;
+  document.getElementById('result').textContent = 'Prüfe…';
+
+  // Klassifizieren (Top-3)
+  const preds = await model.classify(canvas, 3); // [{className, probability}, ...]
+  busy = false;
+
+  // Ausgabe
+  const lines = preds.map(p => `${p.className} — ${(p.probability*100).toFixed(1)}%`);
+  document.getElementById('result').innerHTML =
+    '<b>Top-Ergebnisse</b><br>' + lines.join('<br>');
+
+  const top = preds[0];
+  const isDog = looksLikeDog(top.className) && top.probability >= THRESHOLD;
+
+  document.getElementById('secret').style.display = isDog ? 'block' : 'none';
+};
+</script>
+</html>
