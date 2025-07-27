@@ -86,7 +86,7 @@
         <h3 id="p1-title">Rätsel 1 – Musikrätsel 🎶</h3>
         <p><strong>Welches Lied ist gesucht?</strong> 🍺🧑‍✈️</p>
         <div class="input-row">
-          <input id="word" type="text" autocomplete="off" placeholder="Titel eingeben … 🎤" />
+          <input id="word" type="text" autocomplete="off" placeholder="Titel eingeben …" />
           <button id="check1">Prüfen ✅</button>
         </div>
         <div id="status1" class="status" aria-live="polite"></div>
@@ -109,7 +109,7 @@
           <span class="waveSymbol">🌊</span>
         </div>
         <div class="input-row">
-          <input id="code" type="text" inputmode="numeric" maxlength="4" placeholder="z. B. 3214 🔐" />
+          <input id="code" type="text" inputmode="numeric" maxlength="4" placeholder="Antwort eingeben …" />
           <button id="check2">Prüfen ✅</button>
         </div>
         <div id="status2" class="status" aria-live="polite"></div>
@@ -119,9 +119,9 @@
       <article class="puzzle" id="puzzle3" aria-labelledby="p3-title">
         <h3 id="p3-title">Rätsel 3 – Analysis I (Basel-Reihe) 🧮</h3>
         <p>Bestimme die exakte Summe <strong>S = ∑<sub>n=1</sub><sup>∞</sup> 1/n²</strong> ✨.</p>
-        <p>Antwort als exakter Ausdruck oder Zahl (Toleranz 1e−6) ➗.</p>
+        <p>Antworte als exakter Ausdruck oder als Zahl (Toleranz 1e−6).</p>
         <div class="input-row">
-          <input id="sumInput" type="text" autocomplete="off" placeholder="Exakte Form oder Zahl … π²/6" />
+          <input id="sumInput" type="text" autocomplete="off" placeholder="Antwort eingeben …" />
           <button id="check3">Prüfen ✅</button>
         </div>
         <div id="status3" class="status" aria-live="polite"></div>
@@ -131,9 +131,9 @@
       <article class="puzzle" id="puzzle4" aria-labelledby="p4-title">
         <h3 id="p4-title">Rätsel 4 – ε–δ-Aufgabe 📐</h3>
         <p>Für <strong>f(x)=3x+1</strong> gilt <strong>lim<sub>x→2</sub> f(x) = 7</strong>. Gib eine gültige Wahl <strong>δ(ε)</strong> an,
-           sodass aus <strong>|x−2| &lt; δ</strong> stets <strong>|f(x)−7| &lt; ε</strong> folgt. 🧠</p>
+           sodass aus <strong>|x−2| &lt; δ</strong> stets <strong>|f(x)−7| &lt; ε</strong> folgt.</p>
         <div class="input-row">
-          <input id="deltaFormula" type="text" placeholder="Formel für δ(ε) … z. B. ε/3" />
+          <input id="deltaFormula" type="text" placeholder="Formel eingeben …" />
           <button id="check4f">Formel prüfen ✅</button>
         </div>
         <div class="input-row" style="margin-top:8px">
@@ -147,7 +147,7 @@
       <!-- 5: Kfz -->
       <article class="puzzle" id="puzzle5" aria-labelledby="p5-title">
         <h3 id="p5-title">Rätsel 5 – Kfz-Bremssysteme 🚗🛠️</h3>
-        <p>Wodurch wird der <strong>Bremskraftverstärker (BKV)</strong> typischerweise mit Unterdruck versorgt? 🔧</p>
+        <p>Wodurch wird der <strong>Bremskraftverstärker (BKV)</strong> typischerweise mit Unterdruck versorgt?</p>
         <form id="kfzForm">
           <label style="display:block;margin:6px 0"><input type="radio" name="kfz" value="A"> A) Otto: Saugrohrunterdruck · Diesel: Vakuumpumpe.</label>
           <label style="display:block;margin:6px 0"><input type="radio" name="kfz" value="B"> B) Beide ausschließlich durch Saugrohrunterdruck.</label>
@@ -174,14 +174,14 @@
       <h3 id="edit-title">Details bearbeiten ✏️</h3>
       <div class="grid">
         <label>Datum 📅<br><input id="e_datum" type="text" value="16.08.2025"></label>
-        <label>Uhrzeit ⏰<br><input id="e_uhr" type="text" placeholder="z. B. 10:30"></label>
+        <label>Uhrzeit ⏰<br><input id="e_uhr" type="text" placeholder=""></label>
         <label>Treffpunkt 📍<br><input id="e_ort" type="text" value="Isarufer, München (genauer Treffpunkt folgt)"></label>
         <label>Route 🗺️<br><input id="e_route" type="text" value="Isar in München – Abschnitt nach Absprache"></label>
         <label>Dauer ⏳<br><input id="e_dauer" type="text" value="ca. 3–5 Stunden inklusive Pause"></label>
         <label>Mitbringen 🎒<br><input id="e_mitbringen" type="text" value="Sonnencreme, Wasser, Handtuch, Sonnenbrille, ggf. Wechselsachen"></label>
         <label>Verpflegung 🥪🥤<br><input id="e_snacks" type="text" value="Picknick & Getränke organisieren wir 🎒"></label>
         <label>Wetter-Backup ☔️<br><input id="e_backup" type="text" value="Bei Starkregen/Unwetter verschieben wir."></label>
-        <label>Kontakt 📞<br><input id="e_kontakt" type="text" placeholder="Name + Telefonnummer"></label>
+        <label>Kontakt 📞<br><input id="e_kontakt" type="text" placeholder=""></label>
       </div>
       <div class="controls">
         <button id="saveBtn">Speichern 💾</button>
@@ -221,13 +221,12 @@
 
 <script>
 (function(){
-  // Rätsel-1: „Bierkapitän“ in verschiedenen Schreibweisen zulassen
   const EXPECTED_R1_RAW = "BIERKAPITÄN";
   const EXPECTED_R1_ASCII = "BIERKAPITAN";
   const EXPECTED_R1_AE = "BIERKAPITAEN";
 
-  const EXPECTED_CODE = "3214"; // 3 Enten, 2 Paddel, 1 Ring, 4 Wellengruppen
-  const TARGET_NUM = Math.PI*Math.PI/6; // ≈1.64493406685
+  const EXPECTED_CODE = "3214";
+  const TARGET_NUM = Math.PI*Math.PI/6;
   const TOL = 1e-6;
 
   let solved1=false, solved2=false, solved3=false, solved4=false, solved5=false, inserted=false;
@@ -280,7 +279,7 @@
   function isExactOk(s){
     const t = s.toLowerCase().replace(/\s+/g,'').replace(/π/g,'pi');
     return /^\(?pi\^?2\)?\/6$/.test(t) || /^pipi\/6$/.test(t) || /^\(?pi\*pi\)?\/6$/.test(t);
-    }
+  }
   function isNumericOk(s){
     const n = Number(s.replace(',','.'));
     return Number.isFinite(n) && Math.abs(n - (Math.PI*Math.PI/6)) <= TOL;
@@ -350,7 +349,7 @@
 
   function saveFromEditor(){
     const fields=["datum","uhr","ort","route","dauer","mitbringen","snacks","backup","kontakt"];
-    fields.forEach(k=>{ const src=$("#e_"+k).value || $("#v_"+k).textContent; $("#v_"+k).textContent=src; localStorage.setItem("v_"+k,src); });
+    fields.forEach(k=>{ const src=$("#e_"+k).value || $("#v_"+k).textContent; $("#v_"+k).textContent=src; localStorage.setItem("v_"+k",src); });
     $("#editor").style.display="none";
   }
   function fillEditorFromVoucher(){
