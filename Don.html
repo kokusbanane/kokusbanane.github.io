@@ -2,61 +2,99 @@
 <html lang="de">
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Herz-Checker – Canvas ohne ML</title>
+<title>Herz-Checker – Canvas ohne ML (tolerant)</title>
 <style>
-  body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;max-width:780px;margin:0 auto;padding:24px;}
+  :root{
+    --w: 256px;
+  }
+  body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;max-width:900px;margin:0 auto;padding:24px;line-height:1.45}
   h1{font-size:1.6rem;margin:0 0 0.5rem;}
-  #draw{border:1px solid #ccc;border-radius:8px;touch-action:none;background:#fff;}
+  #wrap{display:grid;grid-template-columns:auto 1fr;gap:24px;align-items:start}
+  #draw{width:var(--w);height:var(--w);border:1px solid #ccc;border-radius:10px;background:#fff;touch-action:none}
   .row{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin:12px 0;}
-  button{padding:10px 16px;border-radius:6px;border:1px solid #bbb;background:#f6f6f6;cursor:pointer}
+  button{padding:10px 16px;border-radius:8px;border:1px solid #bbb;background:#f6f6f6;cursor:pointer}
   button:active{transform:translateY(1px)}
-  label span{display:inline-block;width:7.5rem}
-  #scores{font-variant-numeric:tabular-nums}
-  #secret{display:none;margin-top:16px;padding:12px;border:1px dashed #8cbf26;border-radius:8px;background:#f7ffe8;}
+  label{display:inline-flex;align-items:center;gap:6px}
+  label span{min-width:7.8rem;display:inline-block}
+  input[type=number]{width:6rem}
+  #scores{font-variant-numeric:tabular-nums;margin-top:8px}
+  #secret{display:none;margin-top:16px;padding:12px;border:1px dashed #8cbf26;border-radius:10px;background:#f7ffe8;}
   small.note{color:#555}
+  .panel{padding:12px;border:1px solid #eee;border-radius:10px;background:#fafafa}
 </style>
 
 <h1>Mal’ ein Herz ❤️</h1>
-<p>Drücke <b>Prüfen</b>. Wenn die Zeichnung wie ein Herz aussieht, erscheint der Link.</p>
+<p>Zeichne ein Herz und klicke <b>Prüfen</b>. Wenn Form &amp; Symmetrie passen, erscheint der Link.</p>
 
-<canvas id="draw" width="224" height="224"></canvas>
+<div id="wrap">
+  <canvas id="draw" width="256" height="256"></canvas>
 
-<div class="row">
-  <button id="clear">Löschen</button>
-  <button id="check">Prüfen</button>
+  <div>
+    <div class="row">
+      <button id="clear">Löschen</button>
+      <button id="check">Prüfen</button>
+    </div>
 
-  <label><span>Schwelle Form</span>
-    <input id="thrIoU" type="number" step="0.01" min="0" max="1" value="0.35" style="width:5.5rem">
-  </label>
-  <label><span>Schwelle Symm.</span>
-    <input id="thrSym" type="number" step="0.01" min="0" max="1" value="0.60" style="width:5.5rem">
-  </label>
+    <div class="panel">
+      <div class="row">
+        <label><span>Form-Schwelle</span>
+          <input id="thrIoU" type="number" step="0.01" min="0" max="1" value="0.28">
+        </label>
+        <label><span>Symm.-Schwelle</span>
+          <input id="thrSym" type="number" step="0.01" min="0" max="1" value="0.50">
+        </label>
+      </div>
+      <div class="row">
+        <label title="Toleranz: wie weit darf ein Strich von der idealen Kante entfernt sein?">
+          <span>Toleranz (px)</span>
+          <input id="tolPix" type="number" step="1" min="1" max="32" value="6">
+        </label>
+        <label title="rel. Kantenbreite der Herz-Schablone">
+          <span>Kantenbreite</span>
+          <input id="edgeFrac" type="number" step="0.01" min="0.05" max="0.4" value="0.18">
+        </label>
+      </div>
+      <div class="row">
+        <label title="vertikale Streckung: >1 macht das Herz höher">
+          <span>Vertikal-Faktor</span>
+          <input id="aspectY" type="number" step="0.01" min="0.8" max="1.4" value="1.10">
+        </label>
+      </div>
+    </div>
+
+    <div id="scores">Bereit…</div>
+
+    <div id="secret">
+      ✅ Herz erkannt! <a id="secretLink" href="#" rel="nofollow noopener" target="_blank">Hier ist dein Link</a>
+    </div>
+
+    <hr>
+    <small class="note">
+      Der Algorithmus vergleicht deine Striche mit einer mathematischen Herzform
+      und nutzt Abstände mit Toleranz. Kleine Drehungen und Verschiebungen werden automatisch ausprobiert.
+      Wenn es zu streng ist: erhöhe die Toleranz oder senke die Schwellen.
+    </small>
+  </div>
 </div>
-
-<div id="scores">Bereit…</div>
-
-<div id="secret">
-  ✅ Herz erkannt! <a id="secretLink" href="#" rel="nofollow noopener" target="_blank">Hier ist dein Link</a>
-</div>
-
-<hr>
-<small class="note">
-  Tipp: Zeichne ein deutliches, in sich geschlossenes Herz mit kräftigen Linien. Der Algorithmus vergleicht deine Linien mit einem Herz-Umriss
-  und prüft die Links-Rechts-Symmetrie. Sehr schiefe, offene oder stark dekorierte Formen können abgelehnt werden.
-</small>
 
 <script>
-/*** Einstellungen ***/
-const SECRET_URL = "https://example.com/dein-link";  // <— anpassen
-let IOU_THRESHOLD   = 0.35; // erforderliche Überdeckung mit Herz-Umriss
-let SYMM_THRESHOLD  = 0.60; // erforderliche Links/Rechts-Symmetrie
-const EDGE_FRAC     = 0.10; // Dicke des Herz-Umrisses relativ zur Größe
-const SCALES        = [0.80, 0.90, 1.00, 1.10, 1.20]; // getestete Herzgrößen
+/* ===================== Einstellungen ===================== */
+const SECRET_URL   = "https://example.com/dein-link";   // <— anpassen
+let IOU_THRESHOLD  = 0.28;   // erforderlicher Gesamtscore
+let SYMM_THRESHOLD = 0.50;   // Symmetrie-Minimum
+let TOL_PIX        = 6;      // Pixel-Toleranz (Abstandsgrenze)
+let EDGE_FRAC      = 0.18;   // relative Kantenbreite
+let ASPECT_Y       = 1.10;   // vertikale Streckung der Herzform
 
-// Canvas-Zeichnen
+// getestete Skalen, Rotationen und Offsets
+const SCALES  = [0.85, 0.95, 1.00, 1.05, 1.15];
+const ROT_DEG = [-8, -4, 0, 4, 8];
+const OFFSETS = [-6, -3, 0, 3, 6];
+
+/* ===================== Canvas-Zeichnen ===================== */
 const canvas = document.getElementById('draw');
 const ctx = canvas.getContext('2d');
-ctx.lineWidth = 14;
+ctx.lineWidth = 16;
 ctx.lineJoin = 'round';
 ctx.lineCap = 'round';
 ctx.strokeStyle = '#000';
@@ -85,11 +123,17 @@ document.getElementById('clear').onclick = () => {
   document.getElementById('secret').style.display = 'none';
 };
 
-document.getElementById('thrIoU').addEventListener('input', e => IOU_THRESHOLD = parseFloat(e.target.value));
-document.getElementById('thrSym').addEventListener('input', e => SYMM_THRESHOLD = parseFloat(e.target.value));
 document.getElementById('secretLink').href = SECRET_URL;
 
-/*** Bilddaten -> Binärmaske (1 = Strich) ***/
+// UI-Parameter binden
+const $ = id => document.getElementById(id);
+$('thrIoU').addEventListener('input', e => IOU_THRESHOLD  = parseFloat(e.target.value));
+$('thrSym').addEventListener('input', e => SYMM_THRESHOLD = parseFloat(e.target.value));
+$('tolPix').addEventListener('input', e => TOL_PIX        = parseFloat(e.target.value));
+$('edgeFrac').addEventListener('input', e => EDGE_FRAC    = parseFloat(e.target.value));
+$('aspectY').addEventListener('input', e => ASPECT_Y      = parseFloat(e.target.value));
+
+/* ============ Bild zu Binärmaske (1 = Strich) ============ */
 function canvasToMask(cnv){
   const w = cnv.width, h = cnv.height;
   const data = cnv.getContext('2d').getImageData(0,0,w,h).data;
@@ -101,8 +145,8 @@ function canvasToMask(cnv){
       const i = (y*w + x)*4;
       const a = data[i+3];
       const r = data[i], g = data[i+1], b = data[i+2];
-      // als Strich zählen, wenn sichtbar und dunkel
-      const dark = (0.2126*r + 0.7152*g + 0.0722*b) < 200;
+      const lum = 0.2126*r + 0.7152*g + 0.0722*b;
+      const dark = lum < 200;
       if(a>10 && dark){
         mask[y*w + x] = 1;
         count++;
@@ -112,7 +156,8 @@ function canvasToMask(cnv){
     }
   }
   if(count===0) return {mask, w, h, bbox:null, count:0};
-  // kleine Ausdehnung (3x3), um Lücken zu schließen
+
+  // leichte Dilatation (3x3), um Lücken zu schließen
   const dil = mask.slice();
   for(let y=1;y<h-1;y++){
     for(let x=1;x<w-1;x++){
@@ -124,15 +169,14 @@ function canvasToMask(cnv){
   return {mask:dil, w, h, bbox:{minX,minY,maxX,maxY}, count};
 }
 
-/*** Spiegelsymmetrie (IoU mit horizontal gespiegelter Maske) ***/
+/* ============ Symmetrie (IoU mit gespiegelter Maske) ============ */
 function symmetryScore(mask, w, h){
-  // Schwerpunkt als Symmetrieachse
+  // Schwerpunkt als Achse
   let sumX=0, cnt=0;
-  for(let y=0;y<h;y++) for(let x=0;x<w;x++){
-    if(mask[y*w+x]){ sumX+=x; cnt++; }
-  }
+  for(let i=0;i<w*h;i++) if(mask[i]){ sumX += (i%w); cnt++; }
   if(cnt===0) return 0;
   const cx = sumX/cnt;
+
   let inter=0, uni=0;
   for(let y=0;y<h;y++){
     for(let x=0;x<w;x++){
@@ -144,36 +188,73 @@ function symmetryScore(mask, w, h){
       if(a&b) inter++;
     }
   }
-  return uni? inter/uni : 0;
+  return uni ? inter/uni : 0;
 }
 
-/*** Herzgefüllte Maske in Zielrechteck schreiben ***/
-function fillHeartMask(arr, W, H, offX, offY, boxW, boxH, scale){
-  // Herzgleichung im [-1,1]-Koordinatensystem
+/* ============ Abstandstransform (8-Nachbarn, Chamfer) ============ */
+function edtFromMask(mask, w, h){
+  const INF = 1e9, d = new Float32Array(w*h);
+  for(let i=0;i<w*h;i++) d[i] = mask[i] ? 0 : INF;
+
+  const c1 = 1.0, cD = Math.SQRT2;
+  // Vorwärts
+  for(let y=0;y<h;y++){
+    for(let x=0;x<w;x++){
+      const i = y*w+x;
+      let v = d[i];
+      if(x>0)          v = Math.min(v, d[i-1] + c1);
+      if(y>0)          v = Math.min(v, d[i-w] + c1);
+      if(x>0 && y>0)   v = Math.min(v, d[i-w-1] + cD);
+      if(x<w-1 && y>0) v = Math.min(v, d[i-w+1] + cD);
+      d[i] = v;
+    }
+  }
+  // Rückwärts
+  for(let y=h-1;y>=0;y--){
+    for(let x=w-1;x>=0;x--){
+      const i = y*w+x;
+      let v = d[i];
+      if(x<w-1)          v = Math.min(v, d[i+1] + c1);
+      if(y<h-1)          v = Math.min(v, d[i+w] + c1);
+      if(x<w-1 && y<h-1) v = Math.min(v, d[i+w+1] + cD);
+      if(x>0 && y<h-1)   v = Math.min(v, d[i+w-1] + cD);
+      d[i] = v;
+    }
+  }
+  return d;
+}
+
+/* ============ Herz füllen (implizite Gleichung) ============ */
+function fillHeartMask(arr, W,H, offX, offY, boxW, boxH, scale, rotRad=0){
+  // (x^2 + y^2 - r^2)^3 - r x^2 y^3 <= 0
   const r = 1.0;
-  // leichte vertikale Streckung für „klassische“ Herzform
-  const aspectY = 1.1;
+  const cos = Math.cos(rotRad), sin = Math.sin(rotRad);
 
   for(let y=0; y<boxH; y++){
     for(let x=0; x<boxW; x++){
-      const gx = offX + x;
-      const gy = offY + y;
+      const gx = offX + x, gy = offY + y;
       if(gx<0||gy<0||gx>=W||gy>=H) continue;
 
-      // Normierung in [-1,1]
-      const nx = ((x/boxW)*2 - 1) / scale;
-      const ny = (((y/boxH)*2 - 1) / scale) * aspectY;
+      // Normiert in [-1,1] und Rotation um Zentrum
+      let nx = (x/boxW)*2 - 1;
+      let ny = (y/boxH)*2 - 1;
+
+      // Rotation
+      const rx =  cos*nx + sin*ny;
+      const ry = -sin*nx + cos*ny;
+
+      // Skalierung + vertikale Streckung
+      nx = rx / scale;
+      ny = (ry / scale) * ASPECT_Y;
 
       const v = Math.pow(nx*nx + ny*ny - r*r, 3) - r * nx*nx * ny*ny*ny;
-      if(v <= 0){
-        arr[gy*W + gx] = 1;
-      }
+      if(v <= 0) arr[gy*W + gx] = 1;
     }
   }
 }
 
-/*** Herz-Umriss (Kante) aus zwei gefüllten Herzen (groß - klein) ***/
-function heartEdgeMask(W,H,bbox,scale,edgeFrac){
+/* ============ Herz-Kante (dicker Ring) ============ */
+function heartEdgeMask(W,H,bbox,scale,edgeFrac,rotRad,dx=0,dy=0){
   const {minX,minY,maxX,maxY} = bbox;
   const boxW = Math.max(1, maxX-minX+1);
   const boxH = Math.max(1, maxY-minY+1);
@@ -181,8 +262,8 @@ function heartEdgeMask(W,H,bbox,scale,edgeFrac){
   const big = new Uint8Array(W*H);
   const small = new Uint8Array(W*H);
 
-  fillHeartMask(big,   W,H, minX, minY, boxW, boxH, scale);
-  fillHeartMask(small, W,H, minX, minY, boxW, boxH, scale*(1-edgeFrac));
+  fillHeartMask(big,   W,H, minX+dx, minY+dy, boxW, boxH, scale, rotRad);
+  fillHeartMask(small, W,H, minX+dx, minY+dy, boxW, boxH, scale*(1-edgeFrac), rotRad);
 
   const edge = new Uint8Array(W*H);
   let edgeCount = 0;
@@ -193,36 +274,73 @@ function heartEdgeMask(W,H,bbox,scale,edgeFrac){
   return {edge, edgeCount};
 }
 
-/*** Abgleich: Überdeckung zwischen Zeichnungs-Strichen und Herz-Umriss ***/
+/* ============ Dice-Koeffizient ============ */
+function diceCoeff(a,b){
+  let inter=0, sa=0, sb=0;
+  for(let i=0;i<a.length;i++){
+    if(a[i]) sa++;
+    if(b[i]) sb++;
+    if(a[i] & b[i]) inter++;
+  }
+  return (sa+sb) ? (2*inter)/(sa+sb) : 0;
+}
+
+/* ============ Hauptvergleich mit Toleranzen/Rotation/Offset ============ */
 function matchScore(drawMask, W,H, bbox){
-  if(!bbox) return {score:0, bestScale:1, edgeHit:0, edgeTotal:1, extraPenalty:1};
+  if(!bbox) return {score:0, best:{scale:1,rot:0,dx:0,dy:0}, coverE:0, coverS:0, dice:0};
 
-  let best = {score:0, bestScale:1, edgeHit:0, edgeTotal:1, extraPenalty:1};
-
-  // Anzahl gezeichneter Pixel (für „Übermalen“-Penalty)
-  let drawn=0; for(let i=0;i<W*H;i++) if(drawMask[i]) drawn++;
+  const distS = edtFromMask(drawMask, W,H); // Abstand zu Strichen
+  let best = {score:0, best:{scale:1,rot:0,dx:0,dy:0}, coverE:0, coverS:0, dice:0};
 
   for(const s of SCALES){
-    const {edge, edgeCount} = heartEdgeMask(W,H,bbox,s,EDGE_FRAC);
-    if(edgeCount===0) continue;
+    for(const deg of ROT_DEG){
+      const rot = deg * Math.PI/180;
+      for(const dx of OFFSETS){
+        for(const dy of OFFSETS){
+          const {edge, edgeCount} = heartEdgeMask(W,H,bbox,s,EDGE_FRAC,rot,dx,dy);
+          if(edgeCount===0) continue;
 
-    let hit=0;
-    for(let i=0;i<W*H;i++){
-      if(edge[i] & drawMask[i]) hit++;
-    }
-    const edgeCover = hit / edgeCount;      // Anteil der Herz-Kante, die getroffen wurde
-    const drawingUse = drawn ? hit / drawn : 0; // Anteil deiner Striche, die auf der Herz-Kante liegen
+          // Edge→Stroke-Abdeckung
+          let hitE = 0;
+          for(let i=0;i<W*H;i++){
+            if(edge[i] && distS[i] <= TOL_PIX) hitE++;
+          }
+          const coverE = hitE / edgeCount;
 
-    // finaler Score: konservativ das Minimum der beiden Anteile
-    const score = Math.min(edgeCover, drawingUse);
+          // Stroke→Edge-Abdeckung
+          const distE = edtFromMask(edge, W,H);
+          let drawn=0, hitS=0;
+          for(let i=0;i<W*H;i++){
+            if(drawMask[i]){
+              drawn++;
+              if(distE[i] <= TOL_PIX) hitS++;
+            }
+          }
+          const coverS = drawn ? hitS / drawn : 0;
 
-    if(score > best.score){
-      best = {score, bestScale:s, edgeHit:hit, edgeTotal:edgeCount, extraPenalty:drawingUse};
+          // Dice der tolerierten Masken
+          const tolE = new Uint8Array(W*H);
+          const tolS = new Uint8Array(W*H);
+          for(let i=0;i<W*H;i++){
+            if(distE[i] <= TOL_PIX) tolE[i]=1;
+            if(distS[i] <= TOL_PIX) tolS[i]=1;
+          }
+          const dice = diceCoeff(tolE, tolS);
+
+          const minCov = Math.min(coverE, coverS);
+          const score = 0.5*minCov + 0.5*dice;
+
+          if(score > best.score){
+            best = {score, best:{scale:s,rot:deg,dx,dy}, coverE, coverS, dice};
+          }
+        }
+      }
     }
   }
   return best;
 }
 
+/* ===================== Prüfen-Button ===================== */
 document.getElementById('check').onclick = () => {
   const {mask,w,h,bbox} = canvasToMask(canvas);
   const symm = symmetryScore(mask,w,h);
@@ -231,17 +349,14 @@ document.getElementById('check').onclick = () => {
   const isHeart = match.score >= IOU_THRESHOLD && symm >= SYMM_THRESHOLD;
 
   const pct = x => (x*100).toFixed(1)+'%';
-  const boxTxt = bbox
-    ? `BBox ${bbox.minX},${bbox.minY}–${bbox.maxX},${bbox.maxY}`
-    : 'keine Striche';
-
+  const b = match.best;
   document.getElementById('scores').innerHTML =
-    `Form-Score: <b>${pct(match.score)}</b> &nbsp; ` +
-    `(Kanten-Treffer ${pct(match.edgeHit/(match.edgeTotal||1))}, ` +
-    `Strich-Nutzung ${pct(match.extraPenalty)}) &nbsp; ` +
+    `Score: <b>${pct(match.score)}</b> &nbsp; ` +
+    `Edge→Stroke: ${pct(match.coverE)} &nbsp; ` +
+    `Stroke→Edge: ${pct(match.coverS)} &nbsp; ` +
+    `Dice: ${pct(match.dice)} &nbsp; ` +
     `| Symmetrie: <b>${pct(symm)}</b> &nbsp; ` +
-    `| Scale: ${match.bestScale.toFixed(2)} &nbsp; ` +
-    `| ${boxTxt}`;
+    `| Scale ${b.scale.toFixed(2)} · Rot ${b.rot}° · dx ${b.dx} · dy ${b.dy}`;
 
   document.getElementById('secret').style.display = isHeart ? 'block' : 'none';
 };
