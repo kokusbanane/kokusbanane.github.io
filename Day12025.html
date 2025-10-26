@@ -6,25 +6,119 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
     :root {
-      --bg: #0f172a; --panel: #111827; --text: #e5e7eb;
-      --muted: #9ca3af; --accent: #60a5fa; --border: #1f2937;
+      --bg: #0f172a;
+      --panel: #111827;
+      --text: #e5e7eb;
+      --muted: #9ca3af;
+      --accent: #60a5fa;
+      --border: #1f2937;
     }
+
     * { box-sizing: border-box; }
-    body { margin: 0; font-family: system-ui, sans-serif; color: var(--text); background: var(--bg); line-height: 1.6; }
-    header { padding: 2.5rem 1rem 1rem; text-align: center; }
-    h1 { margin: 0; font-size: 2rem; }
-    .sub { color: var(--muted); margin: .25rem 0 0; font-size: .95rem; }
-    .wrapper { max-width: 860px; margin: 0 auto; padding: 0 1rem 3rem; }
-    .card { background: var(--panel); border: 1px solid var(--border); border-radius: 10px; padding: 1rem 1.25rem; box-shadow: 0 4px 10px rgba(0,0,0,.25); }
-    .timeline { position: relative; margin: 1rem 0 0; padding-left: 0; list-style: none; }
-    .timeline::before { content: ""; position: absolute; left: 28px; top: 0; bottom: 0; width: 2px; background: var(--accent); opacity: .3; }
-    .step { display: grid; grid-template-columns: 56px 1fr; gap: .25rem 1rem; padding: 1rem 0; border-bottom: 1px dashed var(--border); }
-    .step:last-child { border-bottom: 0; }
-    .badge { width: 52px; height: 52px; display: grid; place-items: center; border-radius: 50%; border: 1px solid var(--border); background: #0b1220; box-shadow: inset 0 0 0 2px rgba(255,255,255,.03); }
-    .badge span { font-size: 1.35rem; }
-    .title { margin: 0; font-weight: 600; font-size: 1.05rem; }
-    .meta { margin: .15rem 0 0; color: var(--muted); font-size: .92rem; }
-    footer { text-align: center; color: var(--muted); font-size: .9rem; padding: 1rem; }
+
+    body {
+      margin: 0;
+      font-family: system-ui, sans-serif;
+      color: var(--text);
+      background: var(--bg);
+      line-height: 1.6;
+    }
+
+    header {
+      padding: 2.5rem 1rem 1rem;
+      text-align: center;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 2rem;
+    }
+
+    .sub {
+      color: var(--muted);
+      margin: 0.25rem 0 0;
+      font-size: 0.95rem;
+    }
+
+    .wrapper {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 0 1rem 3rem;
+    }
+
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1rem 1.25rem;
+      box-shadow: 0 4px 10px rgba(0,0,0,.25);
+    }
+
+    .timeline {
+      position: relative;
+      margin: 1rem 0 0;
+      padding-left: 0;
+      list-style: none;
+    }
+
+    .timeline::before {
+      content: "";
+      position: absolute;
+      left: 28px;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: var(--accent);
+      opacity: 0.3;
+    }
+
+    .step {
+      position: relative;
+      display: grid;
+      grid-template-columns: 56px 1fr;
+      gap: 0.25rem 1rem;
+      padding: 1rem 0;
+      border-bottom: 1px dashed var(--border);
+    }
+
+    .step:last-child {
+      border-bottom: none;
+    }
+
+    .badge {
+      width: 52px;
+      height: 52px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      border: 1px solid var(--border);
+      background: #0b1220;
+      box-shadow: inset 0 0 0 2px rgba(255,255,255,.03);
+      z-index: 1;
+    }
+
+    .badge span {
+      font-size: 1.35rem;
+    }
+
+    .title {
+      margin: 0;
+      font-weight: 600;
+      font-size: 1.05rem;
+    }
+
+    .meta {
+      margin: 0.15rem 0 0;
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    footer {
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.9rem;
+      padding: 1rem;
+    }
   </style>
 </head>
 <body>
@@ -36,6 +130,7 @@
   <main class="wrapper">
     <section class="card" aria-label="Itinerary timeline">
       <ol class="timeline">
+        
         <li class="step">
           <div class="badge"><span>⏰</span></div>
           <div>
@@ -96,7 +191,7 @@
           <div class="badge"><span>🎬</span></div>
           <div>
             <h2 class="title">Movie: “Das Kanu des Manitu” — CinemaxX München</h2>
-            <p class="meta">Start: 17:20 — arrive early for tickets.</p>
+            <p class="meta">17:20 screening — arrive early for tickets and snacks.</p>
           </div>
         </li>
 
@@ -104,9 +199,10 @@
           <div class="badge"><span>🥣</span></div>
           <div>
             <h2 class="title">Dinner: Secret Garden (vegan)</h2>
-            <p class="meta">After the film — hot soup or a warm bowl. Short walk from Isartor.</p>
+            <p class="meta">After the film — warm soups and vegan dishes. Short walk from Isartor.</p>
           </div>
         </li>
+
       </ol>
     </section>
   </main>
