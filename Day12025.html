@@ -6,160 +6,92 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
     :root {
-      --bg: #0f172a;
-      --panel: #111827;
-      --text: #e5e7eb;
-      --muted: #9ca3af;
-      --accent: #60a5fa;
-      --border: #1f2937;
+      --bg: #0f172a; --panel: #111827; --text: #e5e7eb;
+      --muted: #9ca3af; --accent: #60a5fa; --border: #1f2937;
     }
     * { box-sizing: border-box; }
-    body {
-      margin: 0;
-      font-family: system-ui, sans-serif;
-      color: var(--text);
-      background: var(--bg);
-      line-height: 1.6;
-    }
-    header {
-      padding: 2.5rem 1rem 1rem;
-      text-align: center;
-    }
-    h1 {
-      margin: 0;
-      font-size: 2rem;
-    }
-    .sub {
-      color: var(--muted);
-      margin: 0.25rem 0 0;
-      font-size: 0.95rem;
-    }
-    .wrapper {
-      max-width: 800px;
-      margin: 0 auto;
-      padding: 0 1rem 3rem;
-    }
-    .card {
-      background: var(--panel);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 1rem 1.25rem;
-      box-shadow: 0 4px 10px rgba(0,0,0,.25);
-    }
-    .timeline {
-      position: relative;
-      margin: 1rem 0 0;
-      padding-left: 0;
-      list-style: none;
-    }
-    .timeline::before {
-      content: "";
-      position: absolute;
-      left: 28px;
-      top: 0;
-      bottom: 0;
-      width: 2px;
-      background: var(--accent);
-      opacity: 0.3;
-    }
-    .step {
-      position: relative;
-      display: grid;
-      grid-template-columns: 56px 1fr;
-      gap: .25rem 1rem;
-      padding: 1rem 0;
-      border-bottom: 1px dashed var(--border);
-    }
+    body { margin: 0; font-family: system-ui, sans-serif; color: var(--text); background: var(--bg); line-height: 1.6; }
+    header { padding: 2.5rem 1rem 1rem; text-align: center; }
+    h1 { margin: 0; font-size: 2rem; }
+    .sub { color: var(--muted); margin: .25rem 0 0; font-size: .95rem; }
+    .wrapper { max-width: 860px; margin: 0 auto; padding: 0 1rem 3rem; }
+    .card { background: var(--panel); border: 1px solid var(--border); border-radius: 10px; padding: 1rem 1.25rem; box-shadow: 0 4px 10px rgba(0,0,0,.25); }
+    .timeline { position: relative; margin: 1rem 0 0; padding-left: 0; list-style: none; }
+    .timeline::before { content: ""; position: absolute; left: 28px; top: 0; bottom: 0; width: 2px; background: var(--accent); opacity: .3; }
+    .step { display: grid; grid-template-columns: 56px 1fr; gap: .25rem 1rem; padding: 1rem 0; border-bottom: 1px dashed var(--border); }
     .step:last-child { border-bottom: 0; }
-    .badge {
-      width: 52px;
-      height: 52px;
-      display: grid;
-      place-items: center;
-      border-radius: 50%;
-      border: 1px solid var(--border);
-      background: #0b1220;
-      box-shadow: inset 0 0 0 2px rgba(255,255,255,.03);
-      z-index: 1;
-    }
-    .badge span { font-size: 1.4rem; }
-    .title {
-      margin: 0;
-      font-weight: 600;
-      font-size: 1.05rem;
-    }
-    .desc {
-      margin: 0.25rem 0 0;
-      color: var(--muted);
-      font-size: 0.95rem;
-    }
-    footer {
-      text-align: center;
-      color: var(--muted);
-      font-size: 0.9rem;
-      padding: 1rem;
-    }
+    .badge { width: 52px; height: 52px; display: grid; place-items: center; border-radius: 50%; border: 1px solid var(--border); background: #0b1220; box-shadow: inset 0 0 0 2px rgba(255,255,255,.03); }
+    .badge span { font-size: 1.35rem; }
+    .title { margin: 0; font-weight: 600; font-size: 1.05rem; }
+    .meta { margin: .15rem 0 0; color: var(--muted); font-size: .92rem; }
+    footer { text-align: center; color: var(--muted); font-size: .9rem; padding: 1rem; }
   </style>
 </head>
 <body>
   <header>
     <h1>das frühbad des manitu</h1>
-    <p class="sub">Winter day trip through Munich</p>
+    <p class="sub">Laid-back winter day in Munich</p>
   </header>
 
   <main class="wrapper">
     <section class="card" aria-label="Itinerary timeline">
       <ol class="timeline">
-        <!-- Breakfast -->
         <li class="step">
-          <div class="badge" aria-hidden="true"><span>🥐</span></div>
+          <div class="badge"><span>⏰</span></div>
+          <div>
+            <h2 class="title">Wake up</h2>
+            <p class="meta">09:00 — Slow start. Dress warm.</p>
+          </div>
+        </li>
+
+        <li class="step">
+          <div class="badge"><span>🥐</span></div>
           <div>
             <h2 class="title">Breakfast at A Little Lost</h2>
-            <p class="desc">Warm coffee and a quick meal before heading out. Dress for the cold.</p>
+            <p class="meta">10:00–11:00 — Coffee and a simple bite.</p>
           </div>
         </li>
 
-        <!-- Tram ride -->
         <li class="step">
-          <div class="badge" aria-hidden="true"><span>🚋</span></div>
+          <div class="badge"><span>🚋</span></div>
           <div>
             <h2 class="title">Tram ride north</h2>
-            <p class="desc">Take the tram through the quiet winter streets. Keep gloves handy.</p>
+            <p class="meta">11:00–11:40 — Winter streets, gloves on.</p>
           </div>
         </li>
 
-        <!-- Dantebad swim -->
         <li class="step">
-          <div class="badge" aria-hidden="true"><span>🏊‍♂️</span></div>
+          <div class="badge"><span>🏊‍♂️</span></div>
           <div>
             <h2 class="title">Swim at Dantebad</h2>
-            <p class="desc">Outdoor pool, heated for winter. A short swim in the cold air is the main event.</p>
+            <p class="meta">11:40–13:00 — Heated outdoor pool.</p>
           </div>
         </li>
 
-        <!-- Rest -->
         <li class="step">
-          <div class="badge" aria-hidden="true"><span>😴</span></div>
+          <div class="badge"><span>🍝</span></div>
+          <div>
+            <h2 class="title">Shrimp linguine at Pflegerstraße</h2>
+            <p class="meta">13:20–14:10 — Garlic, chili, lemon. Hot and quick.</p>
+          </div>
+        </li>
+
+        <li class="step">
+          <div class="badge"><span>😴</span></div>
           <div>
             <h2 class="title">Rest at Pflegerstraße</h2>
-            <p class="desc">Stop to warm up and rest. Quiet break indoors before the evening.</p>
+            <p class="meta">14:10–15:30 — Warm up indoors.</p>
           </div>
         </li>
 
-        <!-- Cinema -->
         <li class="step">
-          <div class="badge" aria-hidden="true"><span>🎬</span></div>
+          <div class="badge"><span>🚋</span></div>
           <div>
-            <h2 class="title">Cinema: “Das Kanu des Manitu”</h2>
-            <p class="desc">Evening movie indoors. End the day warm and dry.</p>
+            <h2 class="title">To Isartor / CinemaxX</h2>
+            <p class="meta">15:30–16:00 — Tram into the center.</p>
           </div>
         </li>
-      </ol>
-    </section>
-  </main>
 
-  <footer>
-    Munich — winter itinerary
-  </footer>
-</body>
-</html>
+        <li class="step">
+          <div class="badge"><span>🎬</span></div>
+          <div>
