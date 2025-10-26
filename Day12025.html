@@ -2,248 +2,86 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <title>das frühbad des manitu — One-Day Munich Itinerary</title>
+  <title>das frühbad des manitu</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
-    :root {
-      --bg: #0f172a;
-      --panel: #111827;
-      --text: #e5e7eb;
-      --muted: #9ca3af;
-      --accent: #60a5fa;
-      --accent-2: #34d399;
-      --border: #1f2937;
-    }
-    * { box-sizing: border-box; }
     body {
       margin: 0;
-      font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, "Helvetica Neue", Arial, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-      color: var(--text);
-      background: radial-gradient(1200px 700px at 20% -10%, #1f2937 0%, var(--bg) 45%) no-repeat fixed, var(--bg);
+      font-family: system-ui, sans-serif;
+      background-color: #0e1726;
+      color: #e5e7eb;
       line-height: 1.6;
     }
     header {
-      padding: 3rem 1.25rem 1rem;
       text-align: center;
+      padding: 2rem 1rem 1rem;
     }
     h1 {
-      margin: 0 0 .25rem;
-      font-size: clamp(1.6rem, 2.8vw + 1rem, 2.4rem);
-      letter-spacing: .2px;
-    }
-    .sub {
-      color: var(--muted);
       margin: 0;
-      font-size: 0.98rem;
+      font-size: 2rem;
     }
     .wrapper {
-      max-width: 900px;
+      max-width: 800px;
       margin: 0 auto;
-      padding: 0 1rem 3rem;
+      padding: 1rem 1.5rem 3rem;
     }
     .card {
-      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 1.25rem;
-      box-shadow: 0 10px 30px rgba(0,0,0,.25), inset 0 1px 0 rgba(255,255,255,.02);
-      backdrop-filter: blur(6px);
+      background-color: #111827;
+      border: 1px solid #1f2937;
+      border-radius: 10px;
+      padding: 1rem 1.25rem;
+      margin-bottom: 1rem;
     }
-    .timeline {
-      position: relative;
-      margin: 1rem 0 0;
-      padding-left: 0;
-      list-style: none;
+    h2 {
+      margin-top: 0;
+      font-size: 1.1rem;
     }
-    .timeline::before {
-      content: "";
-      position: absolute;
-      left: 26px;
-      top: 0;
-      bottom: 0;
-      width: 2px;
-      background: linear-gradient(var(--accent), var(--accent-2));
-      opacity: .35;
+    p {
+      margin: 0.25rem 0 0.75rem;
     }
-    .step {
-      position: relative;
-      display: grid;
-      grid-template-columns: 56px 1fr;
-      gap: .25rem 1rem;
-      padding: 1rem 0 1rem 0;
-      border-bottom: 1px dashed var(--border);
-    }
-    .step:last-child { border-bottom: 0; }
-    .badge {
-      width: 52px; height: 52px;
-      display: grid; place-items: center;
-      border-radius: 50%;
-      border: 1px solid var(--border);
-      background: #0b1220;
-      box-shadow: inset 0 0 0 2px rgba(255,255,255,.03);
-      position: relative;
-      z-index: 1;
-    }
-    .badge span { font-size: 1.4rem; }
-    .title {
-      margin: 0;
-      font-weight: 700;
-      font-size: 1.05rem;
-    }
-    .meta {
-      margin: .1rem 0 .35rem;
-      color: var(--muted);
-      font-size: .92rem;
-    }
-    .desc { margin: 0; }
-    .chips { display: flex; flex-wrap: wrap; gap: .4rem; margin-top: .6rem; }
-    .chip {
-      font-size: .8rem;
-      padding: .25rem .55rem;
-      border-radius: 999px;
-      border: 1px solid var(--border);
-      background: rgba(255,255,255,.03);
-      color: var(--muted);
-    }
-    .opt { color: var(--accent-2); font-weight: 600; }
     footer {
       text-align: center;
-      color: var(--muted);
-      font-size: .9rem;
-      padding: 1.25rem 1rem 3rem;
+      color: #9ca3af;
+      font-size: 0.9rem;
+      padding: 1rem;
     }
-    a { color: var(--accent); text-decoration: none; }
-    a:hover { text-decoration: underline; }
   </style>
 </head>
 <body>
   <header>
     <h1>das frühbad des manitu</h1>
-    <p class="sub">One-day trip through Munich — relaxed, refreshing, and a little cinematic</p>
+    <p>One-day winter itinerary through Munich</p>
   </header>
 
   <main class="wrapper">
-    <section class="card" aria-label="Itinerary timeline">
-      <ol class="timeline">
-        <!-- 1) Breakfast -->
-        <li class="step">
-          <div class="badge" aria-hidden="true"><span>🥐</span></div>
-          <div>
-            <h2 class="title">Breakfast at <em>A Little Lost</em></h2>
-            <p class="meta">Start your day cozy &amp; caffeinated.</p>
-            <p class="desc">
-              Ease into the morning with coffee and pastries at <em>A Little Lost</em>.
-              Grab something hearty for energy before the day’s rides and swims.
-            </p>
-            <div class="chips">
-              <span class="chip">Breakfast</span>
-              <span class="chip">Coffee</span>
-              <span class="chip">Chill vibes</span>
-            </div>
-          </div>
-        </li>
-
-        <!-- 2) Tram ride -->
-        <li class="step">
-          <div class="badge" aria-hidden="true"><span>🚋</span></div>
-          <div>
-            <h2 class="title">Tram north through Munich</h2>
-            <p class="meta">A scenic ride heading to the northern districts.</p>
-            <p class="desc">
-              Hop on the tram heading north — a chance to see a few quieter corners of Munich before your next swim.
-            </p>
-            <div class="chips">
-              <span class="chip">Public Transport</span>
-              <span class="chip">Sightseeing</span>
-            </div>
-          </div>
-        </li>
-
-        <!-- 3) Danebad swim -->
-        <li class="step">
-          <div class="badge" aria-hidden="true"><span>🏊‍♂️</span></div>
-          <div>
-            <h2 class="title">Quick swim at Danebad</h2>
-            <p class="meta">Cool off and stretch your muscles.</p>
-            <p class="desc">
-              Before heading further north, stop at <strong>Danebad</strong> for a short swim.
-              It’s the perfect spot for a light dip and a moment of calm before the next destination.
-            </p>
-            <div class="chips">
-              <span class="chip">Swim</span>
-              <span class="chip">Refresh</span>
-              <span class="chip">Short Stop</span>
-            </div>
-          </div>
-        </li>
-
-        <!-- 4) Dantebad -->
-        <li class="step">
-          <div class="badge" aria-hidden="true"><span>🏖️</span></div>
-          <div>
-            <h2 class="title">Swim and relax at Dantebad</h2>
-            <p class="meta">Take your time to unwind fully.</p>
-            <p class="desc">
-              Continue on to <strong>Dantebad</strong> for a longer swim and some lounging.
-              Whether it’s laps, sunbathing, or floating lazily, it’s a highlight of the day.
-            </p>
-            <div class="chips">
-              <span class="chip">Swim</span>
-              <span class="chip">Relax</span>
-              <span class="chip">Outdoor fun</span>
-            </div>
-          </div>
-        </li>
-
-        <!-- 5) Optional nap -->
-        <li class="step">
-          <div class="badge" aria-hidden="true"><span>😴</span></div>
-          <div>
-            <h2 class="title">Optional nap at Pflegerstraße <span class="opt">(if the mood strikes)</span></h2>
-            <p class="meta">Recharge time.</p>
-            <p class="desc">
-              Depending on how you feel after swimming, pause for a relaxing nap at <strong>Pflegerstraße</strong>.
-              Keep it unhurried—this stop is all about listening to your energy levels.
-            </p>
-            <div class="chips">
-              <span class="chip">Rest</span>
-              <span class="chip">Flexible</span>
-            </div>
-          </div>
-        </li>
-
-        <!-- 6) Cinema -->
-        <li class="step">
-          <div class="badge" aria-hidden="true"><span>🎬</span></div>
-          <div>
-            <h2 class="title">Cinema: “Das Kanu des Manitu”</h2>
-            <p class="meta">Round off the day with a movie night.</p>
-            <p class="desc">
-              Head to the cinema and watch <strong>Das Kanu des Manitu</strong>. Grab popcorn, kick back,
-              and enjoy the show to end the day on a fun note.
-            </p>
-            <div class="chips">
-              <span class="chip">Cinema</span>
-              <span class="chip">Comedy</span>
-              <span class="chip">Evening</span>
-            </div>
-          </div>
-        </li>
-      </ol>
+    <section class="card">
+      <h2>Breakfast at A Little Lost</h2>
+      <p>Start with a warm coffee and a simple breakfast. Keep it short and light — the day will be cold.</p>
     </section>
 
-    <section style="margin-top:1rem" class="card" aria-label="Notes">
-      <h3 style="margin-top:0">Tips &amp; notes</h3>
-      <ul style="margin:0; padding-left:1.2rem">
-        <li>This plan is intentionally flexible—shuffle steps as you like.</li>
-        <li>Pack swimwear and a light towel for Danebad &amp; Dantebad.</li>
-        <li>Check tram times and cinema showtimes on the day.</li>
-      </ul>
+    <section class="card">
+      <h2>Tram ride north</h2>
+      <p>Take the tram heading north. Stay warm, enjoy the quiet ride, and watch the city go by under winter light.</p>
+    </section>
+
+    <section class="card">
+      <h2>Swim at Dantebad</h2>
+      <p>Arrive at Dantebad for a winter swim. The heated outdoor pool is open even in the cold months — a good way to wake up fully.</p>
+    </section>
+
+    <section class="card">
+      <h2>Rest at Pflegerstraße</h2>
+      <p>After swimming, stop at Pflegerstraße. Rest, warm up, and take it easy before the evening.</p>
+    </section>
+
+    <section class="card">
+      <h2>Cinema: “Das Kanu des Manitu”</h2>
+      <p>Finish the day at the cinema. Watch <em>Das Kanu des Manitu</em> and end the evening indoors, away from the cold.</p>
     </section>
   </main>
 
   <footer>
-    Made with ❤️ for a laid-back Munich day.
+    Munich — Winter itinerary edition
   </footer>
 </body>
 </html>
