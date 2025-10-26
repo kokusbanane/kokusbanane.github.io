@@ -5,43 +5,97 @@
   <title>das frühbad des manitu</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
+    :root {
+      --bg: #0f172a;
+      --panel: #111827;
+      --text: #e5e7eb;
+      --muted: #9ca3af;
+      --accent: #60a5fa;
+      --border: #1f2937;
+    }
+    * { box-sizing: border-box; }
     body {
       margin: 0;
       font-family: system-ui, sans-serif;
-      background-color: #0e1726;
-      color: #e5e7eb;
+      color: var(--text);
+      background: var(--bg);
       line-height: 1.6;
     }
     header {
+      padding: 2.5rem 1rem 1rem;
       text-align: center;
-      padding: 2rem 1rem 1rem;
     }
     h1 {
       margin: 0;
       font-size: 2rem;
     }
+    .sub {
+      color: var(--muted);
+      margin: 0.25rem 0 0;
+      font-size: 0.95rem;
+    }
     .wrapper {
       max-width: 800px;
       margin: 0 auto;
-      padding: 1rem 1.5rem 3rem;
+      padding: 0 1rem 3rem;
     }
     .card {
-      background-color: #111827;
-      border: 1px solid #1f2937;
+      background: var(--panel);
+      border: 1px solid var(--border);
       border-radius: 10px;
       padding: 1rem 1.25rem;
-      margin-bottom: 1rem;
+      box-shadow: 0 4px 10px rgba(0,0,0,.25);
     }
-    h2 {
-      margin-top: 0;
-      font-size: 1.1rem;
+    .timeline {
+      position: relative;
+      margin: 1rem 0 0;
+      padding-left: 0;
+      list-style: none;
     }
-    p {
-      margin: 0.25rem 0 0.75rem;
+    .timeline::before {
+      content: "";
+      position: absolute;
+      left: 28px;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: var(--accent);
+      opacity: 0.3;
+    }
+    .step {
+      position: relative;
+      display: grid;
+      grid-template-columns: 56px 1fr;
+      gap: .25rem 1rem;
+      padding: 1rem 0;
+      border-bottom: 1px dashed var(--border);
+    }
+    .step:last-child { border-bottom: 0; }
+    .badge {
+      width: 52px;
+      height: 52px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      border: 1px solid var(--border);
+      background: #0b1220;
+      box-shadow: inset 0 0 0 2px rgba(255,255,255,.03);
+      z-index: 1;
+    }
+    .badge span { font-size: 1.4rem; }
+    .title {
+      margin: 0;
+      font-weight: 600;
+      font-size: 1.05rem;
+    }
+    .desc {
+      margin: 0.25rem 0 0;
+      color: var(--muted);
+      font-size: 0.95rem;
     }
     footer {
       text-align: center;
-      color: #9ca3af;
+      color: var(--muted);
       font-size: 0.9rem;
       padding: 1rem;
     }
@@ -50,38 +104,62 @@
 <body>
   <header>
     <h1>das frühbad des manitu</h1>
-    <p>One-day winter itinerary through Munich</p>
+    <p class="sub">Winter day trip through Munich</p>
   </header>
 
   <main class="wrapper">
-    <section class="card">
-      <h2>Breakfast at A Little Lost</h2>
-      <p>Start with a warm coffee and a simple breakfast. Keep it short and light — the day will be cold.</p>
-    </section>
+    <section class="card" aria-label="Itinerary timeline">
+      <ol class="timeline">
+        <!-- Breakfast -->
+        <li class="step">
+          <div class="badge" aria-hidden="true"><span>🥐</span></div>
+          <div>
+            <h2 class="title">Breakfast at A Little Lost</h2>
+            <p class="desc">Warm coffee and a quick meal before heading out. Dress for the cold.</p>
+          </div>
+        </li>
 
-    <section class="card">
-      <h2>Tram ride north</h2>
-      <p>Take the tram heading north. Stay warm, enjoy the quiet ride, and watch the city go by under winter light.</p>
-    </section>
+        <!-- Tram ride -->
+        <li class="step">
+          <div class="badge" aria-hidden="true"><span>🚋</span></div>
+          <div>
+            <h2 class="title">Tram ride north</h2>
+            <p class="desc">Take the tram through the quiet winter streets. Keep gloves handy.</p>
+          </div>
+        </li>
 
-    <section class="card">
-      <h2>Swim at Dantebad</h2>
-      <p>Arrive at Dantebad for a winter swim. The heated outdoor pool is open even in the cold months — a good way to wake up fully.</p>
-    </section>
+        <!-- Dantebad swim -->
+        <li class="step">
+          <div class="badge" aria-hidden="true"><span>🏊‍♂️</span></div>
+          <div>
+            <h2 class="title">Swim at Dantebad</h2>
+            <p class="desc">Outdoor pool, heated for winter. A short swim in the cold air is the main event.</p>
+          </div>
+        </li>
 
-    <section class="card">
-      <h2>Rest at Pflegerstraße</h2>
-      <p>After swimming, stop at Pflegerstraße. Rest, warm up, and take it easy before the evening.</p>
-    </section>
+        <!-- Rest -->
+        <li class="step">
+          <div class="badge" aria-hidden="true"><span>😴</span></div>
+          <div>
+            <h2 class="title">Rest at Pflegerstraße</h2>
+            <p class="desc">Stop to warm up and rest. Quiet break indoors before the evening.</p>
+          </div>
+        </li>
 
-    <section class="card">
-      <h2>Cinema: “Das Kanu des Manitu”</h2>
-      <p>Finish the day at the cinema. Watch <em>Das Kanu des Manitu</em> and end the evening indoors, away from the cold.</p>
+        <!-- Cinema -->
+        <li class="step">
+          <div class="badge" aria-hidden="true"><span>🎬</span></div>
+          <div>
+            <h2 class="title">Cinema: “Das Kanu des Manitu”</h2>
+            <p class="desc">Evening movie indoors. End the day warm and dry.</p>
+          </div>
+        </li>
+      </ol>
     </section>
   </main>
 
   <footer>
-    Munich — Winter itinerary edition
+    Munich — winter itinerary
   </footer>
 </body>
 </html>
